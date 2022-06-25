@@ -15,7 +15,6 @@ public class Behave_Input : MonoBehaviour
     private float TouchSpeed = 0;
 
 
-
     void Update()
     {
         F_Touch_Detection();
@@ -31,7 +30,7 @@ public class Behave_Input : MonoBehaviour
 
     private void F_Touch_Detection()
     {
-        if (Input.touchCount > 0)
+        if (Input.GetAxisRaw("Fire1") > 0 && Input.touchCount > 0) // Input.GetKeyDown(key:KeyCode.Mouse0) : Input.touchCount > 0
         {
             touch = Input.GetTouch(0);
             Current_Touch_Position_Value = touch.position;
@@ -173,9 +172,10 @@ public class Behave_Input : MonoBehaviour
     private void F_Save_Results_To_Local_Data()
     {
         //////// Save Screen Touch Detection////////
-        if (bool_Touch_Detected)
+        if (Input.GetAxisRaw("Fire1") > 0) //bool_touch_detected
         {
             Local_Data.Touch_isTouched = true;
+            
         }
         else
         {
