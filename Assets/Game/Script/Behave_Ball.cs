@@ -33,7 +33,7 @@ public class Behave_Ball : MonoBehaviour
 
 
     private float GolfBall_StopSpeed = 0.00001f;
-    private float Shoot_Force = 0;
+    private float HitMagnitude = 0;
     private float GolfBall_Linear_Velocity = 0;
     private float GolfBall_Angular_Velocity = 0;
     private float Golf_Ball_Rolling_Audio_Pitch = 0;
@@ -50,6 +50,14 @@ public class Behave_Ball : MonoBehaviour
     private bool bool_GolfBall_Bounce_Sound_isPlayed = false;
     private bool bool_GolfBall_Shoot_Sound_isPlayed = true;
     private bool bool_GolfBall_Rolling_Sound_isPlayed = false;
+
+    #endregion
+
+    #region ShootInput
+
+    private Vector2? InitTouchLocation;
+    private Vector2 EndTouchLocation;
+    private Vector2 GrabPos;
 
     #endregion
 
@@ -75,9 +83,38 @@ public class Behave_Ball : MonoBehaviour
         F_Play_Golf_Audio();
         F_Adjust_Ball_Rolling_Pitch_Sound();
 
-        if (Input.GetAxisRaw("Fire1") > 0.0f)
+        GrabPull();
+
+    }
+
+    private void GrabPull()
+    {
+        if (Input.GetAxisRaw("Fire1")>0)
         {
-            F_Shoot();
+            if (InitTouchLocation.HasValue)
+            {
+                EndTouchLocation = Input.mousePosition;
+                HitMagnitude = Vector2.Distance(GrabPos, EndTouchLocation);
+                Debug.Log("Hit Magnitude = " + HitMagnitude.ToString());
+                Debug.LogWarning("GrabPos = " + GrabPos.ToString());
+                Debug.LogError("EndGrabPos = " + EndTouchLocation.ToString());
+
+                return;
+            }else if (TraceForSelection().HasValue)
+            {
+                GrabPos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+                InitTouchLocation = GrabPos;
+                GrabPull();
+            }
+        }
+        else
+        {
+            if (InitTouchLocation.HasValue)
+            {
+                CalcPower(HitMagnitude);
+                F_Shoot();
+                InitTouchLocation = null;
+            }
         }
     }
 
@@ -189,8 +226,6 @@ public class Behave_Ball : MonoBehaviour
         }
     }
 
-
-
     private void F_Play_Golf_Audio()
     {
         /////////////// Play GolfBall Bounce Sound//////////////////
@@ -265,8 +300,8 @@ public class Behave_Ball : MonoBehaviour
 
     public void F_Shoot()
     {
-        //GolfBall_Rb.AddForce(-GolfBall_LookAt_Camera_Transform.forward * Shoot_Force, ForceMode.Force);
-        GolfBall_Rb.AddForce(-GolfBall_LookAt_Camera_Transform.forward * 2, ForceMode.Force);
+        GolfBall_Rb.AddForce(-GolfBall_LookAt_Camera_Transform.forward * HitMagnitude, ForceMode.Force);
+        //GolfBall_Rb.AddForce(-GolfBall_LookAt_Camera_Transform.forward * 2, ForceMode.Force);
         LocalData.bool_GolfBall_isShot = true;
         bool_GolfBall_isShot = true;
         bool_Reseting_Power_Slider = true;
@@ -275,10 +310,10 @@ public class Behave_Ball : MonoBehaviour
     }
 
 
-    public void F_Adjust_Power(float Power_Sensitivity)
+    public void CalcPower(float Power_Sensitivity)
     {
         Power_Effectivity = Power_Sensitivity;
-        Shoot_Force = Power_Effectivity * Club_Max_Power;
+        HitMagnitude = Power_Effectivity * Club_Max_Power;
     }
 
     private void OnDrawGizmos()
@@ -286,6 +321,37 @@ public class Behave_Ball : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawRay(GolfBall_LookAt_Camera_Transform.position, -GolfBall_LookAt_Camera_Transform.forward * 2);
         Gizmos.DrawWireSphere(GolfBall_LookAt_Camera_Transform.position, Sphere_Overlap_Radius);
+    }
+
+
+    private Vector3? TraceForSelection() 
+    {
+        Vector3 PosNear = new Vector3(
+            Input.mousePosition.x,
+            Input.mousePosition.y,
+            Camera.main.nearClipPlane);
+
+        Vector3 PosFar = new Vector3(
+            Input.mousePosition.x,
+            Input.mousePosition.y,
+            Camera.main.farClipPlane);
+
+
+        Vector3 ScreentoWorldFar = Camera.main.ScreenToWorldPoint(PosFar);
+        Vector3 ScreentoWorldNear = Camera.main.ScreenToWorldPoint(PosNear);
+
+
+        RaycastHit hitResult;
+        if (Physics.Raycast(ScreentoWorldNear,ScreentoWorldFar-ScreentoWorldNear,out hitResult,float.PositiveInfinity))
+        {
+            if (hitResult.transform == transform)
+            {
+                InitTouchLocation = hitResult.transform.position;
+                return InitTouchLocation;
+            }
+        }
+        
+        return null;
     }
 
 }
