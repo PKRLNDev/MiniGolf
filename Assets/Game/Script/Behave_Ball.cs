@@ -5,35 +5,53 @@ using UnityEngine.UI;
 
 public class Behave_Ball : MonoBehaviour
 {
+    #region Variables
     [SerializeField]
     private Component_AudioComp AudioComp;
     [SerializeField]
-    private Struct_LocalData Local_Data;
+    private Struct_LocalData LocalData;
     [SerializeField]
     private LineRenderer LineRenderer;
     [SerializeField]
     private Transform Camera_Transform, Original_GolfBall_Transform, GolfBall_LookAt_Camera_Transform;
     [SerializeField]
     private GameObject LineRenderer_GO;
+    //[SerializeField]
+    //private Slider Power_Slider;
     [SerializeField]
-    private Slider Power_Slider;
+    private float Club_Max_Power;
     [SerializeField]
-    private float Club_Max_Power, GolfBall_Speed_Decrasing_Velocity, Brake_Angular_Drag = 3f;
+    private float GolfBall_Speed_Decrasing_Velocity;
+    [SerializeField]
+    private float Brake_Angular_Drag = 3f;
+
     [SerializeField]
     private LayerMask CollidableLayers;
-    private float Normal_Angular_Drag = 0.5f, Sphere_Overlap_Radius = 0.085f;
+    private float Normal_Angular_Drag = 0.5f;
+    private float Sphere_Overlap_Radius = 0.085f;
 
 
 
-    private float GolfBall_StopSpeed = 0.00001f, Shoot_Force = 0, GolfBall_Linear_Velocity = 0, GolfBall_Angular_Velocity = 0, Golf_Ball_Rolling_Audio_Pitch = 0;
+    private float GolfBall_StopSpeed = 0.00001f;
+    private float Shoot_Force = 0;
+    private float GolfBall_Linear_Velocity = 0;
+    private float GolfBall_Angular_Velocity = 0;
+    private float Golf_Ball_Rolling_Audio_Pitch = 0;
+
     private Rigidbody GolfBall_Rb;
-    private bool bool_GolfBall_isMoving = false, bool_GolfBall_isShot = false, bool_Reseting_Power_Slider = false;
+    private bool bool_GolfBall_isMoving = false;
+    private bool bool_GolfBall_isShot = false;
+    private bool bool_Reseting_Power_Slider = false;
     private int hitColliders = 0, Roll_Countdown = 20;
     Collider[] hitCollider = new Collider[2];
     private float Power_Effectivity = 0, Shoot_Time_Power_Effectivity = 0;
 
-    private bool bool_Golf_Ball_hit = false, bool_GolfBall_Bounce_Sound_isPlayed = false, bool_GolfBall_Shoot_Sound_isPlayed = true, bool_GolfBall_Rolling_Sound_isPlayed = false;
+    private bool bool_Golf_Ball_hit = false;
+    private bool bool_GolfBall_Bounce_Sound_isPlayed = false;
+    private bool bool_GolfBall_Shoot_Sound_isPlayed = true;
+    private bool bool_GolfBall_Rolling_Sound_isPlayed = false;
 
+    #endregion
 
 
 
@@ -52,10 +70,15 @@ public class Behave_Ball : MonoBehaviour
         F_Aim_Horizontal();
         F_Set_Golf_LookAt_Position_To_Real_Golf_Ball_Position();
         F_Create_Trajectory_Line();
-        F_Create_Shot_Effect();
+        //F_Create_Shot_Effect();
         F_Detect_Ground_Touch();
         F_Play_Golf_Audio();
         F_Adjust_Ball_Rolling_Pitch_Sound();
+
+        if (Input.GetAxisRaw("Fire1") > 0.0f)
+        {
+            F_Shoot();
+        }
     }
 
     private void F_Find_GolfBall_Linear_And_Angular_Velocity()
@@ -73,14 +96,14 @@ public class Behave_Ball : MonoBehaviour
         {
             bool_GolfBall_isMoving = false;
             bool_GolfBall_isShot = false;
-            Local_Data.bool_GolfBall_isMoving = false;
-            Local_Data.bool_GolfBall_isShot = false;
-            Power_Slider.interactable = true;
+            LocalData.bool_GolfBall_isMoving = false;
+            LocalData.bool_GolfBall_isShot = false;
+            //Power_Slider.interactable = true;
         }
         else
         {
-            Power_Slider.interactable = false;
-            Local_Data.bool_GolfBall_isMoving = true;
+            //Power_Slider.interactable = false;
+            LocalData.bool_GolfBall_isMoving = true;
             bool_GolfBall_isMoving = true;
         }
     }
@@ -131,6 +154,8 @@ public class Behave_Ball : MonoBehaviour
         }
     }
 
+    // this is just the visual drainage effect of slider Might move to an inworld graphic
+    /*
     private void F_Create_Shot_Effect()
     {
         if (Power_Slider.value != 0 && bool_Reseting_Power_Slider)
@@ -141,8 +166,10 @@ public class Behave_Ball : MonoBehaviour
         {
             bool_Reseting_Power_Slider = false;
         }
+ 
     }
 
+     */
     private void F_Detect_Ground_Touch()
     {
         hitColliders = Physics.OverlapSphereNonAlloc(GolfBall_LookAt_Camera_Transform.position, Sphere_Overlap_Radius, hitCollider, CollidableLayers);
@@ -238,8 +265,9 @@ public class Behave_Ball : MonoBehaviour
 
     public void F_Shoot()
     {
-        GolfBall_Rb.AddForce(-GolfBall_LookAt_Camera_Transform.forward * Shoot_Force, ForceMode.Force);
-        Local_Data.bool_GolfBall_isShot = true;
+        //GolfBall_Rb.AddForce(-GolfBall_LookAt_Camera_Transform.forward * Shoot_Force, ForceMode.Force);
+        GolfBall_Rb.AddForce(-GolfBall_LookAt_Camera_Transform.forward * 2, ForceMode.Force);
+        LocalData.bool_GolfBall_isShot = true;
         bool_GolfBall_isShot = true;
         bool_Reseting_Power_Slider = true;
         bool_GolfBall_Shoot_Sound_isPlayed = false;
