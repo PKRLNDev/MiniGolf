@@ -9,11 +9,29 @@ public class Behave_Bouncer : MonoBehaviour
 
     [Range(0, 1000)]
     public float Bounciness;
+    [Range(0, 1000)]
+    public float Jump;
 
 
 
-    private void OnTriggerEnter(Collider other)
+    //private void OnTriggerEnter(Collider collision)
+    //{
+    //    //  I DONT KNOW WHY THIS WORKS
+    //    collision.gameObject.GetComponent<Rigidbody>().velocity =  Vector3.Cross(collision.gameObject.GetComponent<Rigidbody>().velocity,transform.up);
+
+
+    //    Debug.Log("BOUNCE");
+    //    //  I ALSO DONT KNOW WHY THIS DOESNT WORK
+    //    //collision.gameObject.GetComponent<Rigidbody>().AddForce(collision.gameObject.GetComponent<Rigidbody>().velocity.normalized * Bounciness);
+    //}
+
+    private void OnCollisionEnter(Collision collision)
     {
-        other.gameObject.GetComponent<Rigidbody>().AddForce(transform.forward * Bounciness);
+        collision.gameObject.GetComponent<Rigidbody>().velocity = Vector3.Cross(collision.gameObject.GetComponent<Rigidbody>().velocity, transform.up);
+       
+        collision.gameObject.GetComponent<Rigidbody>().AddForce(transform.forward * Bounciness + new Vector3(0,1,0) * Jump);
+
+        Debug.Log("BOUNCE");
     }
+
 }
