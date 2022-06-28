@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor.TerrainTools;
 
 
-[ExecuteInEditMode]
+[ExecuteAlways]
 public class Component_BezierCurve : MonoBehaviour, IMiniGolf
 {
     //ControlPoints
@@ -146,10 +146,13 @@ public class Component_BezierCurve : MonoBehaviour, IMiniGolf
 
         if (ClosestIndex == Dots.Length - 1)
         {
+            Debug.LogWarning(((Dots[ClosestIndex - 1] - Dots[ClosestIndex]).normalized).ToString());
             return (Dots[ClosestIndex - 1] - Dots[ClosestIndex]).normalized;
         }
 
-          
+        Debug.LogWarning(((Dots[ClosestIndex] - Dots[ClosestIndex + 1]).normalized).ToString());
+
+
         return (Dots[ClosestIndex] - Dots[ClosestIndex+1]).normalized;
 
 
@@ -166,7 +169,14 @@ public class Component_BezierCurve : MonoBehaviour, IMiniGolf
         }
 
     }
+    private void OnTriggerStay(Collider collision)
+    {
+        if (collision.gameObject.TryGetComponent(out IMiniGolf MiniGolf))
+        {
+            MiniGolf.BallDragged(GetClosestDotNormal(collision.transform.position), StreamStr);
 
+        }
+    }
 
 
 
@@ -334,12 +344,16 @@ meshFilter.sharedMesh = mesh;
             return;
         }
 
-       
+        mesh.Clear();
 
-        LineRenderer.BakeMesh(mesh, true);
+        LineRenderer.BakeMesh(mesh);
+        mesh.Optimize();
+        mesh.RecalculateNormals();
 
         mesh.RecalculateBounds();
         meshFilter.sharedMesh = mesh;
+
+        
         Mcollider.sharedMesh = mesh;
 
 
