@@ -20,11 +20,13 @@ public class MainMenuUi : MonoBehaviour
 
     public void OnNewGame() 
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene("1");
     }
 
     public void OnLevelSelected(int LevelId) 
     {
+
+
         SceneManager.LoadScene(LevelId);
     }
 
