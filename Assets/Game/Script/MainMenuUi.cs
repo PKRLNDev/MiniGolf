@@ -22,4 +22,10 @@ public class MainMenuUi : MonoBehaviour
     {
         SceneManager.LoadScene(1);
     }
+
+    public void OnLevelSelected(int LevelId) 
+    {
+        SceneManager.LoadScene(LevelId);
+    }
+
 }
