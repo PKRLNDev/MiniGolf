@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor.TerrainTools;
+//using UnityEditor.TerrainTools;
 
 
 [ExecuteAlways]

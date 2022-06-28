@@ -35,7 +35,7 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
 
 
 
-    private float GolfBall_StopSpeed = 0.00001f;
+    private float GolfBall_StopSpeed = 0.01f;
     private float HitMagnitude = 0;
 
     private float Golf_Ball_Rolling_Audio_Pitch = 0;
@@ -108,8 +108,18 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
         PlayAudio();
         AdjustRollingPitch();
 
+
+    }
+
+    private void Update()
+    {
+
+        // INPUT
         GrabPull();
 
+        //DEBUGINPUT
+        OnReset();
+        OnMainMenu();
     }
 
     #region Helpers
@@ -391,7 +401,7 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
                 GrabPos = new Vector2(Input.mousePosition.x, Input.mousePosition.y) - GrabPos;
 
                 CinemachineRig.m_XAxis.Value += GrabPos.x * Time.deltaTime * 90.0f;
-                CinemachineRig.m_YAxis.Value += GrabPos.y * Time.deltaTime * 0.5f;
+                //CinemachineRig.m_YAxis.Value += GrabPos.y * Time.deltaTime * 0.5f;
 
                 GrabPos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
                 return;
@@ -399,7 +409,7 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
             }
             
             // CHECK IF GRABBING BALL AND RETURN
-            if (TraceForSelection().HasValue)
+            if (!bStuck && !bMoving && TraceForSelection().HasValue)
             {
                 GrabPos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
                 InitTouchLocation = GrabPos;
@@ -548,7 +558,29 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
     public void ReturnToSender() 
     {
         transform.position = LaunchLocation;
+        GolfBall_Rb.velocity = new Vector3(0, 0, 0);
     }
+
+
+    #region DEBUG
+
+    private void OnReset() 
+    {
+        if (Input.GetButtonDown("Reset"))
+        {
+            ReturnToSender();
+        }
+    }
+
+    private void OnMainMenu() 
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            SceneManager.LoadScene(0);
+        }
+    }
+
+    #endregion
 
 
 
