@@ -19,20 +19,22 @@ public class CameraManager : MonoBehaviour, IMiniGolf
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
-            BallCamera();
+            PlayUIAnim("LevelReady");
+            
         }
         if (Input.GetKeyDown(KeyCode.G))
         {
-            FreeLook();
+            PlayUIAnim("FreeCam");
         }
     }
 
-    public void BallCamera()
-    {
-        StateMahchine.m_AnimatedTarget.SetTrigger("LevelReady");
-    }
-    public void FreeLook()
-    {
-        StateMahchine.m_AnimatedTarget.SetTrigger("FreeCam");
-    }
+
+
+    #region IMiniGolf
+
+
+    public void PlayUIAnim(string AnimName) { StateMahchine.m_AnimatedTarget.SetTrigger(AnimName); }
+
+
+    #endregion
 }

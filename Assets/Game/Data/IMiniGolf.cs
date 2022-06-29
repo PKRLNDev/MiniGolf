@@ -24,8 +24,11 @@ using UnityEngine;
 
     #region CameraFunks
 
-    public void BallCamera() { }
-    public void FreeLook() { }
+
+    public void UpdateText(string NewText) { }
+
+    public void PlayUIAnim(string AnimName) { }
+
 
     #endregion
 

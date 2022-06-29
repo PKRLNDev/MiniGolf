@@ -536,8 +536,8 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 1.5833334
-    functionName: BallCamera
-    data: 
+    functionName: PlayUIAnim
+    data: LevelReady
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0

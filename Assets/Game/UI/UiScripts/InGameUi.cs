@@ -8,15 +8,8 @@ public class InGameUi : MonoBehaviour, IMiniGolf
     Cinemachine.CinemachineStateDrivenCamera CameraController;
 
 
-    public void FreeLook()
-    {
-        CameraController.GetComponent<IMiniGolf>().FreeLook();
-    }
 
-    public void BallCamera() 
-    {
-        CameraController.GetComponent<IMiniGolf>().BallCamera();
-    }
+    public void PlayUIAnim(string AnimName) { CameraController.GetComponent<IMiniGolf>().PlayUIAnim(AnimName); }
 
 
 }

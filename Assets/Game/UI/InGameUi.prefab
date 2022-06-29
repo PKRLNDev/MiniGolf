@@ -660,6 +660,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4f55252dde07164b9c3eb8ea90af776, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CameraController: {fileID: 0}
 --- !u!95 &897782338264809262
 Animator:
   serializedVersion: 4
