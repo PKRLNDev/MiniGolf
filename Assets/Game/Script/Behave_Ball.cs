@@ -72,7 +72,7 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
 
     #region Score
 
-    private bool bSunk = false;
+    //private bool bSunk = false;
     int HitCount;
 
     #endregion
@@ -538,10 +538,18 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
             }
     
     
-            Vector3 GroundPos = TraceForGround().Value;
-    
+            //Vector3 GroundPos = TraceForGround().Value;
+
+            //LineRenderer.SetPosition(0, transform.position-new Vector3(0,0.05f,0));
+            //LineRenderer.SetPosition(1, new Vector3(GroundPos.x, GroundPos.y+0.05f, GroundPos.z));
+
+
+
             LineRenderer.SetPosition(0, transform.position-new Vector3(0,0.05f,0));
-            LineRenderer.SetPosition(1, new Vector3(GroundPos.x, GroundPos.y+0.05f, GroundPos.z));
+            LineRenderer.SetPosition(1, Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane)));
+
+
+
             return;
         }
 
