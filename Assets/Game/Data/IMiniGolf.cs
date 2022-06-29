@@ -25,7 +25,8 @@ using UnityEngine;
     
         void OnBallSunk(int HitCount, IMiniGolf Ball) { }
 
-
+        public void OnBallGrabbed() { }
+        public void OnBallReleased() { }
     #endregion
 
 
@@ -34,10 +35,10 @@ using UnityEngine;
         void UpdateScore(int HitCount) { }
         void UpdateText(string NewText) { }
 
-    public bool GetExitReady() { return false; }
-    public void OnGameEnded() { }
-    #endregion
-
+        public bool GetExitReady() { return false; }
+        public void OnGameEnded(int HitCount) { }
+        #endregion
+        public void AdjustBallUiPos(Vector2 OnScreenPos) { }
 
     #region CameraFunks
 

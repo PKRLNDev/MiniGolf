@@ -78,14 +78,14 @@ public class Sc_GameMode : MonoBehaviour, IMiniGolf
     /// Async For EndGame
     /// </summary>
     /// <returns></returns>
-    private IEnumerator EndGameCoRoutine()
+    private IEnumerator EndGameCoRoutine(int HitCount)
     {
         
 
         yield return new WaitForSeconds(1.5f);
 
         
-        UiInterface.OnGameEnded();
+        UiInterface.OnGameEnded(HitCount);
         //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 
     }
@@ -114,7 +114,7 @@ public class Sc_GameMode : MonoBehaviour, IMiniGolf
 
             UiInterface.UpdateText("CONGRATULATIONS.\n YOU WON! \n");
 
-            StartCoroutine(EndGameCoRoutine());
+            StartCoroutine(EndGameCoRoutine(HitCount));
         }
     }
 

@@ -61,7 +61,7 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
     private Vector2 EndTouchLocation;
     private Vector2 GrabPos;
 
-    
+    bool bBallGrabbed= false;
 
     [SerializeField]
     Cinemachine.CinemachineFreeLook CinemachineRig;
@@ -390,20 +390,16 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
     /// </summary>
     private void GrabPull()
     {
-        if (Input.GetAxisRaw("Fire1") > 0)
+        if (Input.GetAxisRaw("Fire1") > 0 )
         {
             // CALCULATE POW AND RETURN
-            if (InitTouchLocation.HasValue)
+            if (bBallGrabbed) // bBallGrabbed | InitTouchLocation.HasValue
             {
                 EndTouchLocation = Input.mousePosition;
                 HitMagnitude = Vector2.Distance(GrabPos, EndTouchLocation);
 
-                //Debug.Log("Hit Magnitude = " + HitMagnitude.ToString());
-                //Debug.LogWarning("GrabPos = " + GrabPos.ToString());
-                //Debug.LogError("EndGrabPos = " + EndTouchLocation.ToString());
 
-                //Shoot_Time_Power_Effectivity = Power_Effectivity;
-                DrawLaunchLine();
+//                DrawLaunchLine();
 
                 return;
             }
@@ -437,12 +433,12 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
         else
         {
             // SHOOT IF WE WERE HITTING BALL
-            if (InitTouchLocation.HasValue)
+            if (bBallGrabbed)
             {
                 CalcPower(HitMagnitude);
                 Shoot();
 
-                InitTouchLocation = null;
+                bBallGrabbed = false;
                 LineRenderer_GO.SetActive(false);
             }
             // CLEAR DRAG OPERATION
@@ -636,6 +632,17 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
     {
         GolfBall_Rb.AddForce(- normal * StreamStr);
     }
+
+    public void OnBallGrabbed() { bBallGrabbed = true; }
+    public void OnBallReleased(float Magnitude) 
+    {
+        //HitMagnitude = Magnitude;
+        CalcPower(HitMagnitude);
+        Shoot();
+
+        bBallGrabbed = false; 
+    }
+
     #endregion
 }
 
