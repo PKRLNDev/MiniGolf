@@ -49,8 +49,6 @@ public class Sc_GameMode : MonoBehaviour, IMiniGolf
 
         yield return WaitForInput(KeyCode.Space);
 
-        yield return null;
-
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 
     }
@@ -65,28 +63,13 @@ public class Sc_GameMode : MonoBehaviour, IMiniGolf
         Debug.LogWarning("Active ball Count = " + GetActiveBallCount().ToString());
     }
 
-    #region DEPRECATED
-    //// Update is called once per frame
-    //void Update()
-    //{
-
-    //}
-
-    //TODO ENDGAME
-    //private void EndGame()
-    //{
-    //    ScoreText.text = "CONGRATULATIONS.\n YOU WON! \n" + ScoreText.text;
-
-    //    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    //} 
-    #endregion
+   
 
     #region PublicFunctions
 
 
     public void OnBallSunk(int HitCount)
     {
-        Debug.LogWarning("YourScore = " + HitCount.ToString());
 
         //TODO AlsoGet BallHitCount, BallSinkTime, BallPlayerID.
         if (GetActiveBallCount() == 0)
@@ -95,6 +78,19 @@ public class Sc_GameMode : MonoBehaviour, IMiniGolf
             StartCoroutine(EndGameCoRoutine());
         }
     }
+    public void OnBallSunk(int HitCount, IMiniGolf Ball)
+    {
+
+        //TODO AlsoGet BallHitCount, BallSinkTime, BallPlayerID.
+        if (GetActiveBallCount() == 0)
+        {
+            ScoreText.text = "CONGRATULATIONS.\n YOU WON! \n" + ScoreText.text;
+            StartCoroutine(EndGameCoRoutine());
+        }
+    }
+
+
+
 
     public int GetActiveBallCount()
     {
@@ -108,7 +104,7 @@ public class Sc_GameMode : MonoBehaviour, IMiniGolf
 
     public void UpdateScore(int HitCount)
     {
-        ScoreText.text = "YourScore = " + HitCount.ToString();
+        ScoreText.text = HitCount.ToString();
     }
 
     #endregion

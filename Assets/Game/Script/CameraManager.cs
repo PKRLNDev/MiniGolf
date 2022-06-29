@@ -7,24 +7,32 @@ public class CameraManager : MonoBehaviour, IMiniGolf
 {
 
     [SerializeField]
-    Cinemachine.CinemachineStateDrivenCamera StateMahchine;
+    Cinemachine.CinemachineStateDrivenCamera StateMachine;
     [SerializeField]
     Camera MainCamera;
     [SerializeField]
-    Cinemachine.CinemachineFreeLook FreeLookCamera;
+    Cinemachine.CinemachineFreeLook NearCamera;
+    [SerializeField]
+    Cinemachine.CinemachineFreeLook FarCamera;
 
 
     // Update is called once per frame
     void Update()
     {
+
+        // DEBUGINPUT
         if (Input.GetKeyDown(KeyCode.F))
         {
-            PlayUIAnim("LevelReady");
+            PlayCamAnim("LevelReady");
             
         }
         if (Input.GetKeyDown(KeyCode.G))
         {
-            PlayUIAnim("FreeCam");
+            PlayCamAnim("NearCamera");
+        }
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            PlayCamAnim("FarCamera");
         }
     }
 
@@ -32,8 +40,8 @@ public class CameraManager : MonoBehaviour, IMiniGolf
 
     #region IMiniGolf
 
+    public void PlayCamAnim(string AnimName) { StateMachine.m_AnimatedTarget.SetTrigger(AnimName); }
 
-    public void PlayUIAnim(string AnimName) { StateMahchine.m_AnimatedTarget.SetTrigger(AnimName); }
 
 
     #endregion

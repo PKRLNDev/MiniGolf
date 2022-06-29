@@ -6,6 +6,7 @@ TagManager:
   tags:
   - UnSunkBall
   - GameMode
+  - CameraManager
   layers:
   - Default
   - TransparentFX

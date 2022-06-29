@@ -16,7 +16,9 @@ using UnityEngine;
 
         void BallSunk() { }
 
+        void OnBallSunk() { }
         void OnBallSunk(int HitCount) { }
+        void OnBallSunk(int HitCount, IMiniGolf Ball) { }
 
         void UpdateScore(int HitCount) { }
 
@@ -27,7 +29,8 @@ using UnityEngine;
 
     public void UpdateText(string NewText) { }
 
-    public void PlayUIAnim(string AnimName) { }
+    public void PlayCamAnim(string AnimName) { }
+    public void PlayUiAnim(string AnimName) { }
 
 
     #endregion

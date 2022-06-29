@@ -87,9 +87,23 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
     private bool bStuck;
     #endregion
 
+
+    #region References
+
+    private IMiniGolf CameraManager;
+
+    #endregion
     // Start is called before the first frame update
     private void Start()
     {
+
+       if (GameObject.FindGameObjectWithTag("CameraManager").TryGetComponent(out IMiniGolf _CameraMan))
+       {
+
+           CameraManager = _CameraMan;
+       }
+
+
         GolfBall_Rb = GetComponent<Rigidbody>();
         Physics.gravity = new Vector3(0, -20, 0);
         DefaultDrag = GolfBall_Rb.drag;
@@ -522,7 +536,7 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
                 GameMode.OnBallSunk(HitCount);
             }
         }
-        
+        CameraManager.PlayCamAnim("FarCamera");
     }
 
     /// <summary>
