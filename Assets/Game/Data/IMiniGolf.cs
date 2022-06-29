@@ -4,6 +4,9 @@ using UnityEngine;
 
     public interface IMiniGolf 
     {
+
+    #region GameEvents
+
         void BallStay(bool bShouldStop, int StayLimit) { }
 
         void BallBounce() { }
@@ -17,24 +20,32 @@ using UnityEngine;
         void BallSunk() { }
 
         void OnBallSunk() { }
+
         void OnBallSunk(int HitCount) { }
+    
         void OnBallSunk(int HitCount, IMiniGolf Ball) { }
-
-        void UpdateScore(int HitCount) { }
-
-
-
-    #region CameraFunks
-
-
-    public void UpdateText(string NewText) { }
-
-    public void PlayCamAnim(string AnimName) { }
-    public void PlayUiAnim(string AnimName) { }
 
 
     #endregion
 
 
-}
+    #region UIFunks
+
+        void UpdateScore(int HitCount) { }
+        void UpdateText(string NewText) { }
+
+    public bool GetExitReady() { return false; }
+    public void OnGameEnded() { }
+    #endregion
+
+
+    #region CameraFunks
+
+        public void PlayCamAnim(string AnimName) { }
+        public void PlayUiAnim(string AnimName) { }
+
+    #endregion
+
+
+    }
     

@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using TMPro;
 
 public class Sc_GameMode : MonoBehaviour, IMiniGolf
 {
@@ -10,9 +9,47 @@ public class Sc_GameMode : MonoBehaviour, IMiniGolf
     #region Variables
 
     [SerializeField]
-    private TextMeshProUGUI ScoreText;
+    private GameObject GO_Ui;
+
+
+    private IMiniGolf UiInterface;
+
+
 
     #endregion
+
+
+    #region GetFunctions
+
+    /// <summary>
+    /// Gets Camera Interface from CameraObjectInput
+    /// </summary>
+    /// <returns>true if CameraInterface is valid</returns>
+    private bool GetCameraInterface() 
+    { 
+        if (GO_Ui.TryGetComponent(out IMiniGolf _UiInterface)) 
+        { 
+            UiInterface = _UiInterface; 
+            return true; } 
+        return false; 
+    }
+
+    /// <summary>
+    /// Finds all objects with tag UnSunkBall
+    /// </summary>
+    /// <returns>UnSunkBall Count</returns>
+    public int GetActiveBallCount()
+    {
+        if (GameObject.FindGameObjectsWithTag("UnSunkBall") != null)
+        {
+            return GameObject.FindGameObjectsWithTag("UnSunkBall").Length;
+        }
+
+        return 0;
+    }
+    
+    #endregion
+
 
 
     #region AsyncPrivateFunctions
@@ -23,12 +60,12 @@ public class Sc_GameMode : MonoBehaviour, IMiniGolf
     /// </summary>
     /// <param name="Key"></param>
     /// <returns></returns>
-    private IEnumerator WaitForInput(KeyCode Key)
+    private IEnumerator WaitForEndGameReady()
     {
         bool done = false;
         while (!done) // essentially a "while true", but with a bool to break out naturally
         {
-            if (Input.GetKeyDown(Key))
+            if (UiInterface.GetExitReady())
             {
                 done = true; // breaks the loop
                 
@@ -45,11 +82,11 @@ public class Sc_GameMode : MonoBehaviour, IMiniGolf
     {
         
 
-        yield return new WaitForSeconds(2.5f);
+        yield return new WaitForSeconds(1.5f);
 
-        yield return WaitForInput(KeyCode.Space);
-
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        
+        UiInterface.OnGameEnded();
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 
     }
 
@@ -57,16 +94,16 @@ public class Sc_GameMode : MonoBehaviour, IMiniGolf
     #endregion
 
 
+
     // Start is called before the first frame update
     void Start()
     {
+        GetCameraInterface();
         Debug.LogWarning("Active ball Count = " + GetActiveBallCount().ToString());
     }
 
-   
 
     #region PublicFunctions
-
 
     public void OnBallSunk(int HitCount)
     {
@@ -74,37 +111,32 @@ public class Sc_GameMode : MonoBehaviour, IMiniGolf
         //TODO AlsoGet BallHitCount, BallSinkTime, BallPlayerID.
         if (GetActiveBallCount() == 0)
         {
-            ScoreText.text = "CONGRATULATIONS.\n YOU WON! \n" + ScoreText.text;
+
+            UiInterface.UpdateText("CONGRATULATIONS.\n YOU WON! \n");
+
             StartCoroutine(EndGameCoRoutine());
         }
     }
+
+    /*
     public void OnBallSunk(int HitCount, IMiniGolf Ball)
     {
 
         //TODO AlsoGet BallHitCount, BallSinkTime, BallPlayerID.
         if (GetActiveBallCount() == 0)
         {
-            ScoreText.text = "CONGRATULATIONS.\n YOU WON! \n" + ScoreText.text;
+            UiInterface.UpdateText("CONGRATULATIONS.\n YOU WON! \n");
+
             StartCoroutine(EndGameCoRoutine());
         }
     }
+    */
 
 
-
-
-    public int GetActiveBallCount()
-    {
-        if (GameObject.FindGameObjectsWithTag("UnSunkBall") != null)
-        {
-            return GameObject.FindGameObjectsWithTag("UnSunkBall").Length;
-        }
-
-        return 0;
-    }
 
     public void UpdateScore(int HitCount)
     {
-        ScoreText.text = HitCount.ToString();
+        UiInterface.UpdateScore(HitCount);
     }
 
     #endregion
