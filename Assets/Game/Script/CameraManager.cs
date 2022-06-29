@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraManager : MonoBehaviour
+public class CameraManager : MonoBehaviour, IMiniGolf
 {
 
     [SerializeField]
@@ -27,11 +27,11 @@ public class CameraManager : MonoBehaviour
         }
     }
 
-    private void BallCamera()
+    public void BallCamera()
     {
         StateMahchine.m_AnimatedTarget.SetTrigger("LevelReady");
     }
-    private void FreeLook()
+    public void FreeLook()
     {
         StateMahchine.m_AnimatedTarget.SetTrigger("FreeCam");
     }

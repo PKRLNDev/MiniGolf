@@ -19,5 +19,16 @@ using UnityEngine;
         void OnBallSunk(int HitCount) { }
 
         void UpdateScore(int HitCount) { }
-    }
+
+
+
+    #region CameraFunks
+
+    public void BallCamera() { }
+    public void FreeLook() { }
+
+    #endregion
+
+
+}
     

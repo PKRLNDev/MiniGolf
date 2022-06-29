@@ -622,9 +622,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1598509450867743560}
+  - component: {fileID: 9093658492413503926}
   - component: {fileID: 897782338264809262}
   m_Layer: 0
-  m_Name: ScoreBoard
+  m_Name: InGameUi
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -647,6 +648,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9093658492413503926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5739771090228075015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4f55252dde07164b9c3eb8ea90af776, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!95 &897782338264809262
 Animator:
   serializedVersion: 4
@@ -657,7 +670,7 @@ Animator:
   m_GameObject: {fileID: 5739771090228075015}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 96b63503a3bfa344daba0a917ca4a312, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -694,7 +707,7 @@ RectTransform:
   m_GameObject: {fileID: 6252577159070803016}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0, y: 0, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7613302311435659899}
@@ -973,7 +986,7 @@ RectTransform:
   m_GameObject: {fileID: 8212600576583747970}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0, y: 0, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7613302311435659899}
