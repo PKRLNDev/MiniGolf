@@ -1,4 +1,4 @@
-using System.Collections;
+ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,14 +22,21 @@ public class Component_Returner : MonoBehaviour, IMiniGolf
         }
     }
 
-    private void OnTriggerStay(Collider other)
+    private void OnCollisionStay(Collision collision)
     {
-
-        if (other.gameObject.TryGetComponent(out IMiniGolf Ball))
+        if (collision.gameObject.TryGetComponent(out IMiniGolf Ball))
         {
-            Ball.BallStay(bShouldStop,StayLimit);
+            Ball.BallStay(bShouldStop, StayLimit);
         }
 
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (bSticky && collision.gameObject.TryGetComponent(out IMiniGolf Ball))
+        {
+            Ball.BallUnStuck();
+        }
     }
 
     private void OnTriggerExit(Collider other)
