@@ -8,6 +8,13 @@ public class Behave_Hole : MonoBehaviour, IMiniGolf
     private Collider CollisionBox;
 
     [SerializeField]
+    private AudioClip Sunk;
+    
+    [SerializeField]
+    private AudioSource Speaker;
+
+
+    [SerializeField]
     ParticleSystem Circle;
     [SerializeField]
     ParticleSystem Hit;
@@ -21,6 +28,7 @@ public class Behave_Hole : MonoBehaviour, IMiniGolf
             Circle.Play();
             Hit.Play();
             Ball.BallSunk();
+            Speaker.PlayOneShot(Sunk);
         }
 
         

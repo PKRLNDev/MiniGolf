@@ -5,7 +5,11 @@ using UnityEngine;
 public class MainMenuUi : MonoBehaviour
 {
 
+    [SerializeField]
+    private AudioSource Speaker;
 
+    [SerializeField]
+    private AudioClip ClickSound;
 
     public void OnLevelSelected(string LevelName) 
     {
@@ -25,5 +29,11 @@ public class MainMenuUi : MonoBehaviour
 
         Debug.Log("GAME INSTANCE IS NULL");
     }
+
+    public void OnAnyButton()
+    {
+        Speaker.PlayOneShot(ClickSound);
+    }
+
 
 }

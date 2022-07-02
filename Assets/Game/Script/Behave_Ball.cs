@@ -28,12 +28,13 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
 
     [SerializeField]
     private LayerMask CollidableLayers;
-    
+
     private float Sphere_Overlap_Radius = 0.085f;
 
 
-
-    private float GolfBall_StopSpeed = 0.0001f;
+    [SerializeField]
+    private float GolfBall_Bounce = 0.5f;
+    private float GolfBall_StopSpeed = 0.0005f;
     private float HitMagnitude = 0;
 
     private float Golf_Ball_Rolling_Audio_Pitch = 0;
@@ -318,26 +319,29 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
         {
             bool_GolfBall_Shoot_Sound_isPlayed = true;
 
-            if (Shoot_Time_Power_Effectivity < 0.2f)
-            {
-                AudioComp.PlaySound_Ball_Shot_Lowest();
-            }
-            else if (Shoot_Time_Power_Effectivity < 0.4f)
-            {
-                AudioComp.PlaySound_Ball_Shot_Lower();
-            }
-            else if (Shoot_Time_Power_Effectivity < 0.6f)
-            {
-                AudioComp.PlaySound_Ball_Shot_Medium();
-            }
-            else if (Shoot_Time_Power_Effectivity < 0.8f)
-            {
-                AudioComp.PlaySound_Ball_Shot_Higher();
-            }
-            else
-            {
-                AudioComp.PlaySound_Ball_Shot_Highest();
-            }
+            //if (Shoot_Time_Power_Effectivity < 0.2f)
+            //{
+            //    AudioComp.PlaySound_Ball_Shot_Lowest();
+            //}
+            //else if (Shoot_Time_Power_Effectivity < 0.4f)
+            //{
+            //    AudioComp.PlaySound_Ball_Shot_Lower();
+            //}
+            //else if (Shoot_Time_Power_Effectivity < 0.6f)
+            //{
+            //    AudioComp.PlaySound_Ball_Shot_Medium();
+            //}
+            //else if (Shoot_Time_Power_Effectivity < 0.8f)
+            //{
+            //    AudioComp.PlaySound_Ball_Shot_Higher();
+            //}
+            //else
+            //{
+            //    AudioComp.PlaySound_Ball_Shot_Highest();
+            //}
+
+
+            AudioComp.PlaySound_Ball_Shot_Higher();
         }
         /////////////// Play GolfBall Shot Sound//////////////////
 
@@ -381,6 +385,14 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
     #region Functions
 
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (GolfBall_Rb.velocity.sqrMagnitude > GolfBall_Bounce)
+        {
+
+            AudioComp.PlaySound_Ball_Bounce();
+        }
+    }
 
     /// <summary>
     /// Shoots the ball at aiming location with calculated hitPower
@@ -391,7 +403,7 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
         //Vector3 HitLocation = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, .5f));
         //HitLocation = (transform.position - HitLocation).normalized;
         //HitLocation = new Vector3(HitLocation.x * HitMagnitude, 0, HitLocation.z * HitMagnitude);
-
+        
 
         if (TraceForGround().HasValue)
         {
@@ -411,7 +423,7 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
         }
         //GolfBall_Rb.AddForce(-GolfBall_LookAt_Camera_Transform.forward * 2, ForceMode.Force);
         LocalData.bool_GolfBall_isShot = true;
-        //bool_GolfBall_isShot = true;
+        
         //bool_Reseting_Power_Slider = true;
         bool_GolfBall_Shoot_Sound_isPlayed = false;
         Shoot_Time_Power_Effectivity = Power_Effectivity;
@@ -565,6 +577,7 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
         {
             gameObject.tag = "Untagged";
 
+            
             if (GameObject.FindGameObjectWithTag("GameMode").TryGetComponent(out IMiniGolf GameMode))
             {
                 GameMode.OnBallSunk(HitCount);
@@ -667,6 +680,7 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
     public void BallUnStuck() { bStuck = false; }
 
     public void BallBounce() { }
+
 
     public void BallDragged(Vector3 normal, float StreamStr) 
     {

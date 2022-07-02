@@ -1,9 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+
 
 public class Sc_GameInstance : MonoBehaviour, IMiniGolf
 {
@@ -12,7 +10,6 @@ public class Sc_GameInstance : MonoBehaviour, IMiniGolf
 
     [SerializeField]
     private Canvas LoadingUi;
-
 
 
 

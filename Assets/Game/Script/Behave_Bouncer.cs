@@ -11,6 +11,11 @@ public class Behave_Bouncer : MonoBehaviour
     public float Bounciness;
     [Range(0, 1000)]
     public float Jump;
+    [SerializeField]
+    private AudioClip Bounce;
+
+    [SerializeField]
+    private AudioSource Speaker;
 
 
 
@@ -31,7 +36,7 @@ public class Behave_Bouncer : MonoBehaviour
        
         collision.gameObject.GetComponent<Rigidbody>().AddForce(transform.forward * Bounciness + new Vector3(0,1,0) * Jump);
 
-        Debug.Log("BOUNCE");
+        Speaker.PlayOneShot(Bounce);
     }
 
 }
