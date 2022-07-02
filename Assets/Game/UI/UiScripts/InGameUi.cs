@@ -150,7 +150,7 @@ public class InGameUi : MonoBehaviour, IMiniGolf
 
     #region IMiniGolf
 
-    public void OnBallReady() { PlayUiAnim("BallGrabCome", 2); }
+    public void OnBallReady() { BallInterface.OnBallReady();  PlayUiAnim("BallGrabCome", 2); }
 
 
     #endregion

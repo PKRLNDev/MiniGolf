@@ -69,24 +69,6 @@ public class Sc_GameMode : MonoBehaviour, IMiniGolf
     #region AsyncPrivateFunctions
 
 
-    /// <summary>
-    /// Async For Input
-    /// </summary>
-    /// <param name="Key"></param>
-    /// <returns></returns>
-    private IEnumerator WaitForEndGameReady()
-    {
-        bool done = false;
-        while (!done) // essentially a "while true", but with a bool to break out naturally
-        {
-            if (UiInterface.GetExitReady())
-            {
-                done = true; // breaks the loop
-                
-            }
-            yield return null; // wait until next frame, then continue execution from here (loop continues)
-        }
-    }
 
     /// <summary>
     /// Async For EndGame
@@ -126,25 +108,9 @@ public class Sc_GameMode : MonoBehaviour, IMiniGolf
         if (GetActiveBallCount() == 0)
         {
 
-            UiInterface.UpdateText("CONGRATULATIONS.\n YOU WON! \n");
-
             StartCoroutine(EndGameCoRoutine(HitCount));
         }
     }
-
-    /*
-    public void OnBallSunk(int HitCount, IMiniGolf Ball)
-    {
-
-        //TODO AlsoGet BallHitCount, BallSinkTime, BallPlayerID.
-        if (GetActiveBallCount() == 0)
-        {
-            UiInterface.UpdateText("CONGRATULATIONS.\n YOU WON! \n");
-
-            StartCoroutine(EndGameCoRoutine());
-        }
-    }
-    */
 
 
 

@@ -64,6 +64,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   CinemachineRig: {fileID: 0}
+  HitEffect: {fileID: 0}
 --- !u!33 &274744988450814427
 MeshFilter:
   m_ObjectHideFlags: 0

@@ -33,7 +33,7 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
 
 
 
-    private float GolfBall_StopSpeed = 0.01f;
+    private float GolfBall_StopSpeed = 0.0001f;
     private float HitMagnitude = 0;
 
     private float Golf_Ball_Rolling_Audio_Pitch = 0;
@@ -92,23 +92,23 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
 
     private IMiniGolf UiInterface;
 
+    private IMiniGolf GMInterface;
+
+    [SerializeField]
+    private ParticleSystem HitEffect;
+
     #endregion
 
 
-    // Start is called before the first frame update
+    /// <summary>
+    /// Gets references. Sets up default values.
+    /// </summary>
     private void Start()
     {
 
-       if (GameObject.FindGameObjectWithTag("CameraManager").TryGetComponent(out IMiniGolf _CameraMan))
-       {
-
-           CameraManager = _CameraMan;
-       }
-       if (GameObject.FindGameObjectWithTag("IngameUi").TryGetComponent(out IMiniGolf _UiInterface))
-       {
-            UiInterface = _UiInterface;
-       }
-
+        GetCameraMan();
+        GetUi();
+        GetGameMode();
 
         GolfBall_Rb = GetComponent<Rigidbody>();
 
@@ -116,6 +116,10 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
         DefaultDrag = GolfBall_Rb.drag;
         GolfBall_Rb.maxAngularVelocity = 50000;
     }
+   
+    /// <summary>
+    /// Calculations
+    /// </summary>
     private void FixedUpdate()
     {
 
@@ -123,15 +127,15 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
         CalculateDrag();
         AimAtHorizon();
         PullLookAtActorToGolfBall();
-        //TrajectoryLineActivation();
-        //F_Create_Shot_Effect();
         IsGrounded();
         PlayAudio();
         AdjustRollingPitch();
 
-
     }
 
+    /// <summary>
+    /// Input Registry
+    /// </summary>
     private void Update()
     {
 
@@ -142,6 +146,27 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
         OnReset();
 
     }
+
+    #region Get
+
+    /// <summary>
+    /// Gets IminiGolf GameMode reference
+    /// </summary>
+    private void GetGameMode() { if (GameObject.FindGameObjectWithTag("GameMode").TryGetComponent(out IMiniGolf GameMode)) { GMInterface = GameMode; } }
+
+
+    /// <summary>
+    /// Gets IminiGolf Ui reference
+    /// </summary>
+    private void GetUi() {  if (GameObject.FindGameObjectWithTag("IngameUi").TryGetComponent(out IMiniGolf _UiInterface)) { UiInterface = _UiInterface; } }
+
+
+    /// <summary>
+    /// Gets IminiGolf Cameraman reference
+    /// </summary>
+    private void GetCameraMan() {  if (GameObject.FindGameObjectWithTag("CameraManager").TryGetComponent(out IMiniGolf _CameraMan)) { CameraManager = _CameraMan; } }
+    #endregion
+
 
     #region Helpers
 
@@ -170,8 +195,7 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
 
         if (GetLinearVelocity() <= GolfBall_StopSpeed)
         {
-
-            if (bBallReady && bMoving) { UiInterface.OnBallReady(); Debug.Log("BallReady"); }
+            if (!bStuck && bBallReady && bMoving) { UiInterface.OnBallReady(); Debug.LogWarning("BallReady");  }
             bMoving = false;
             //bool_GolfBall_isShot = false;
             LocalData.bMoving = false;
@@ -338,23 +362,9 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
 
     #endregion
 
-    /*
 
-    // this is just the visual drainage effect of slider Might move to an inworld graphic
-    private void F_Create_Shot_Effect()
-    {
-        if (Power_Slider.value != 0 && bool_Reseting_Power_Slider)
-        {
-            Power_Slider.value = Mathf.Lerp(Power_Slider.value, 0, Time.deltaTime * 35);
-        }
-        else
-        {
-            bool_Reseting_Power_Slider = false;
-        }
- 
-    }
+    #region Functions
 
-     */
 
 
     /// <summary>
@@ -363,18 +373,19 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
     public void Shoot()
     {
 
-        Vector3 HitLocation = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, .5f));
-        HitLocation = (transform.position - HitLocation).normalized;
-        HitLocation = new Vector3(HitLocation.x * HitMagnitude, 0, HitLocation.z * HitMagnitude);
+        //Vector3 HitLocation = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, .5f));
+        //HitLocation = (transform.position - HitLocation).normalized;
+        //HitLocation = new Vector3(HitLocation.x * HitMagnitude, 0, HitLocation.z * HitMagnitude);
+
 
         if (TraceForGround().HasValue)
         {
+            HitEffect.transform.position = transform.position;
+            HitEffect.Play();
             HitCount++;
+
             LaunchLocation = transform.position;
-            if (GameObject.FindGameObjectWithTag("GameMode").TryGetComponent(out IMiniGolf GameMode))
-            {
-                GameMode.UpdateScore(HitCount);
-            }
+            GMInterface.UpdateScore(HitCount);
 
             Vector3 GroundPos = TraceForGround().Value;
             GroundPos = (transform.position - GroundPos).normalized;
@@ -392,6 +403,8 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
         BallUnStuck();
         ResetDrag();
     }
+
+
 
     /// <summary>
     /// Checks if we are grabbing ball or screen.
@@ -588,8 +601,13 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
         transform.position = LaunchLocation;
         GolfBall_Rb.velocity = new Vector3(0, 0, 0);
         GolfBall_Rb.angularVelocity = new Vector3(0, 0, 0);
+
+        bStuck = false;
+        bBallReady= true;
+        bMoving = true;
     }
 
+    #endregion
 
     #region DEBUG
 
@@ -607,7 +625,6 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
 
 
 
-
     #region MiniGolfInterface
     public void BallStay(bool bShouldStop, int StayLimit) 
     {
@@ -620,13 +637,13 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
             }
         }
 
-         Stay += Time.deltaTime;
-
-         if (Stay >= StayLimit)
-         {
-             ReturnToSender();
-             Stay = 0;
-         }
+        Stay += Time.deltaTime;
+        
+        if (Stay >= StayLimit)
+        {
+            ReturnToSender();
+            Stay = 0;
+        }
     }
     public void BallStuck() { bStuck = true; }
     public void BallUnStuck() { bStuck = false; }
