@@ -400,11 +400,6 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
     public void Shoot()
     {
 
-        //Vector3 HitLocation = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, .5f));
-        //HitLocation = (transform.position - HitLocation).normalized;
-        //HitLocation = new Vector3(HitLocation.x * HitMagnitude, 0, HitLocation.z * HitMagnitude);
-        
-
         if (TraceForGround().HasValue)
         {
             HitEffect.transform.position = transform.position;
@@ -414,11 +409,15 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
             LaunchLocation = transform.position;
             GMInterface.UpdateScore(HitCount);
 
-            Vector3 GroundPos = TraceForGround().Value;
-            GroundPos = (transform.position - GroundPos).normalized;
-            GroundPos = new Vector3(GroundPos.x * HitMagnitude, 0, GroundPos.z * HitMagnitude);
 
-            GolfBall_Rb.AddForce(GroundPos, ForceMode.Force);
+            // OnScreen Calculation
+            Vector2 XY = GrabPos - EndTouchLocation;     
+            // OnScreenToWorld
+            Vector3 XyToXZY = new Vector3(XY.x, 0, XY.y);
+            // WorldtoLocal
+            XyToXZY = Camera_Transform.rotation * XyToXZY;
+
+            GolfBall_Rb.AddForce(XyToXZY, ForceMode.Force);
 
         }
         //GolfBall_Rb.AddForce(-GolfBall_LookAt_Camera_Transform.forward * 2, ForceMode.Force);
@@ -468,13 +467,6 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
 
             }
             
-            // CHECK IF GRABBING BALL AND RETURN
-            if (!bStuck && !bMoving && TraceForSelection().HasValue)
-            {
-                GrabPos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-                InitTouchLocation = GrabPos;
-                return;
-            }
 
             // IF ALL FAILS WE ARE DRAGGING CAMERA
             DraggingCamera = true;
@@ -493,44 +485,11 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
             }
             // CLEAR DRAG OPERATION
             DraggingCamera = false;
-            GrabPos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+            GrabPos = Input.mousePosition;// new Vector2(Input.mousePosition.x, Input.mousePosition.y);
             
         }
     }
 
-    /// <summary>
-    /// returns world location of ball if we are grabbing ball.
-    /// </summary>
-    /// <returns>Ball World Location</returns>
-    private Vector3? TraceForSelection() 
-    {
-        Vector3 PosNear = new Vector3(
-            Input.mousePosition.x,
-            Input.mousePosition.y,
-            Camera.main.nearClipPlane);
-
-        Vector3 PosFar = new Vector3(
-            Input.mousePosition.x,
-            Input.mousePosition.y,
-            Camera.main.farClipPlane);
-
-
-        Vector3 ScreentoWorldFar = Camera.main.ScreenToWorldPoint(PosFar);
-        Vector3 ScreentoWorldNear = Camera.main.ScreenToWorldPoint(PosNear);
-
-
-        RaycastHit hitResult;
-        if (Physics.Raycast(ScreentoWorldNear,ScreentoWorldFar-ScreentoWorldNear,out hitResult,float.PositiveInfinity))
-        {
-            if (hitResult.transform == transform)
-            {
-                InitTouchLocation = hitResult.transform.position;
-                return InitTouchLocation;
-            }
-        }
-        
-        return null;
-    }
 
     /// <summary>
     /// Trace for calculating RealWorldPointerPosition.
@@ -598,13 +557,6 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
                 LineRenderer_GO.SetActive(true);
             }
     
-    
-            //Vector3 GroundPos = TraceForGround().Value;
-
-            //LineRenderer.SetPosition(0, transform.position-new Vector3(0,0.05f,0));
-            //LineRenderer.SetPosition(1, new Vector3(GroundPos.x, GroundPos.y+0.05f, GroundPos.z));
-
-
 
             LineRenderer.SetPosition(0, transform.position-new Vector3(0,0.05f,0));
             LineRenderer.SetPosition(1, Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane)));
@@ -701,6 +653,43 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
 
     #endregion
 
+    #region DEPRECATED
+
+    /// <summary>
+    /// DEPRECATED returns world location of ball if we are grabbing ball.
+    /// </summary>
+    /// <returns>Ball World Location</returns>
+    private Vector3? TraceForSelection()
+    {
+        Vector3 PosNear = new Vector3(
+            Input.mousePosition.x,
+            Input.mousePosition.y,
+            Camera.main.nearClipPlane);
+
+        Vector3 PosFar = new Vector3(
+            Input.mousePosition.x,
+            Input.mousePosition.y,
+            Camera.main.farClipPlane);
+
+
+        Vector3 ScreentoWorldFar = Camera.main.ScreenToWorldPoint(PosFar);
+        Vector3 ScreentoWorldNear = Camera.main.ScreenToWorldPoint(PosNear);
+
+
+        RaycastHit hitResult;
+        if (Physics.Raycast(ScreentoWorldNear, ScreentoWorldFar - ScreentoWorldNear, out hitResult, float.PositiveInfinity))
+        {
+            if (hitResult.transform == transform)
+            {
+                InitTouchLocation = hitResult.transform.position;
+                return InitTouchLocation;
+            }
+        }
+
+        return null;
+    }
+
+    #endregion
 
 }
 

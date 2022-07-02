@@ -32,9 +32,12 @@ public class Behave_Bouncer : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        collision.gameObject.GetComponent<Rigidbody>().velocity = Vector3.Cross(collision.gameObject.GetComponent<Rigidbody>().velocity, transform.up);
-       
-        collision.gameObject.GetComponent<Rigidbody>().AddForce(transform.forward * Bounciness + new Vector3(0,1,0) * Jump);
+        //collision.gameObject.GetComponent<Rigidbody>().velocity = Vector3.Cross(collision.gameObject.GetComponent<Rigidbody>().velocity, transform.up);
+
+        
+        collision.gameObject.GetComponent<Rigidbody>().velocity = Vector3.Reflect(collision.gameObject.GetComponent<Rigidbody>().velocity, transform.forward); 
+
+        collision.gameObject.GetComponent<Rigidbody>().AddForce(collision.gameObject.GetComponent<Rigidbody>().velocity * Bounciness + new Vector3(0,1,0) * Jump);
 
         Speaker.PlayOneShot(Bounce);
     }
