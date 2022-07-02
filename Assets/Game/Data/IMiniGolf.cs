@@ -27,6 +27,8 @@ using UnityEngine;
 
         public void OnBallGrabbed() { }
         public void OnBallReleased() { }
+
+        public void OnBallReady() { }
     #endregion
 
 
@@ -43,7 +45,9 @@ using UnityEngine;
     #region CameraFunks
 
         public void PlayCamAnim(string AnimName) { }
+        public void PlayCamAnim(string AnimName, int Layer) { }
         public void PlayUiAnim(string AnimName) { }
+        public void PlayUiAnim(string AnimName, int Layer) { }
 
     #endregion
 

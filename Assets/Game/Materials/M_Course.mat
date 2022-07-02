@@ -8,10 +8,10 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: M_Course
-  m_Shader: {fileID: 4800000, guid: 3dd0f62188fc9fc48ac172783ce1f646, type: 3}
-  m_ValidKeywords: []
-  m_InvalidKeywords:
-  - USE_SS
+  m_Shader: {fileID: 4800000, guid: a3968bfb95fccf04f89e592796a1a609, type: 3}
+  m_ValidKeywords:
+  - USE_S
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -163,8 +163,8 @@ Material:
     - _DstBlend: 0
     - _FadeAmplitude: 28
     - _FadeDistance: 16
-    - _FadeDistanceEnd: 26
-    - _FadeDistanceStart: 16
+    - _FadeDistanceEnd: 18
+    - _FadeDistanceStart: 4
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
@@ -187,22 +187,22 @@ Material:
     - _Mode: 0
     - _NearCameraSmoosh: 0.5
     - _NoisePower: 2
-    - _NumberOfStacks: 17
+    - _NumberOfStacks: 6
     - _OcclusionStrength: 1
-    - _OffsetValue: 0.002
+    - _OffsetValue: 0.006
     - _Parallax: 0.02
     - _ProceduralDistance: 5.5
     - _ProceduralStrength: 1.5
     - _RTEffect: 0
     - _RimMax: 1
     - _RimMin: 0
-    - _RimPower: 8
-    - _ShadowFuziness: 1
+    - _RimPower: 1.5
+    - _ShadowFuziness: 0
     - _ShadowMax: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _TilingN1: 1
+    - _TilingN1: 0.1
     - _TilingN2: 0.05
     - _TilingN3: 0.65
     - _UVSec: 0
@@ -212,14 +212,14 @@ Material:
     - _UseCS: 0
     - _UsePR: 0
     - _UseRT: 0
-    - _UseShadow: 0
+    - _UseShadow: 1
     - _UseShadowCast: 0
-    - _UseSuperStack: 1
+    - _UseSuperStack: 0
     - _UseTP: 0
     - _UseVR: 0
     - _UseWC: 0
-    - _WindForce: 0.22
-    - _WindMovement: 0.2
+    - _WindForce: 0.1
+    - _WindMovement: 0.05
     - _WorldRotation: 0
     - _WorldScale: 10
     - _ZWrite: 1

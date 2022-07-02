@@ -4,12 +4,13 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: bark01_bottom
   m_Shader: {fileID: 4800000, guid: 47cebecd0b7981c4e8acb2ac81351b7e, type: 3}
   m_ShaderKeywords: GEOM_TYPE_MESH _EMISSION
-  m_LightmapFlags: 5
+  m_LightmapFlags: 2
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
@@ -18,6 +19,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - Texture2D_DA90F7DC:
+        m_Texture: {fileID: 2800000, guid: 6303c2c9c649c4a499cd9ce357eb92e2, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Albedo:
         m_Texture: {fileID: 2800000, guid: 6303c2c9c649c4a499cd9ce357eb92e2, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -84,6 +89,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _AO: 1.21
+    - _AlphaCutoff: 0.5
     - _BaseLight: 0.368
     - _BumpScale: 1
     - _Cull: 2
@@ -115,6 +121,7 @@ Material:
     - _ZWrite: 1
     - __dirty: 0
     m_Colors:
+    - Color_5480B15A: {r: 1, g: 1, b: 1, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 0}
     - _EmissionColorUI: {r: 1, g: 1, b: 1, a: 1}

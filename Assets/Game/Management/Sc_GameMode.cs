@@ -19,6 +19,20 @@ public class Sc_GameMode : MonoBehaviour, IMiniGolf
     #endregion
 
 
+    private void Update()
+    {
+        OnMainMenu();
+    }
+
+
+    private void OnMainMenu()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            SceneManager.LoadScene(0);
+        }
+    }
+
     #region GetFunctions
 
     /// <summary>

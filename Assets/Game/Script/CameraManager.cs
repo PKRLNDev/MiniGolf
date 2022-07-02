@@ -15,6 +15,15 @@ public class CameraManager : MonoBehaviour, IMiniGolf
     [SerializeField]
     Cinemachine.CinemachineFreeLook FarCamera;
 
+    public IMiniGolf BallInterface;
+
+    private void Start()
+    {
+        if (GameObject.FindGameObjectWithTag("UnSunkBall").TryGetComponent(out IMiniGolf _interface))
+        {
+            BallInterface = _interface;
+        }
+    }
 
     // Update is called once per frame
     void Update()
@@ -42,7 +51,7 @@ public class CameraManager : MonoBehaviour, IMiniGolf
 
     public void PlayCamAnim(string AnimName) { StateMachine.m_AnimatedTarget.SetTrigger(AnimName); }
 
-
+    public void OnBallReady() { BallInterface.OnBallReady(); }
 
     #endregion
 }

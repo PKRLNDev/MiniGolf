@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 
 
@@ -52,6 +50,7 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
     private bool bool_GolfBall_Bounce_Sound_isPlayed = false;
     private bool bool_GolfBall_Shoot_Sound_isPlayed = true;
     private bool bool_GolfBall_Rolling_Sound_isPlayed = false;
+    private bool bBallReady = false;
 
     #endregion
 
@@ -87,12 +86,15 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
     private bool bStuck;
     #endregion
 
-
     #region References
 
     private IMiniGolf CameraManager;
 
+    private IMiniGolf UiInterface;
+
     #endregion
+
+
     // Start is called before the first frame update
     private void Start()
     {
@@ -102,9 +104,14 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
 
            CameraManager = _CameraMan;
        }
+       if (GameObject.FindGameObjectWithTag("IngameUi").TryGetComponent(out IMiniGolf _UiInterface))
+       {
+            UiInterface = _UiInterface;
+       }
 
 
         GolfBall_Rb = GetComponent<Rigidbody>();
+
         Physics.gravity = new Vector3(0, -20, 0);
         DefaultDrag = GolfBall_Rb.drag;
         GolfBall_Rb.maxAngularVelocity = 50000;
@@ -133,7 +140,7 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
 
         //DEBUGINPUT
         OnReset();
-        OnMainMenu();
+
     }
 
     #region Helpers
@@ -163,11 +170,14 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
 
         if (GetLinearVelocity() <= GolfBall_StopSpeed)
         {
+
+            if (bBallReady && bMoving) { UiInterface.OnBallReady(); Debug.Log("BallReady"); }
             bMoving = false;
             //bool_GolfBall_isShot = false;
             LocalData.bMoving = false;
             LocalData.bool_GolfBall_isShot = false;
             //Power_Slider.interactable = true;
+            //UiInterface.PlayUiAnim("BallGrabCome",2);
         }
         else
         {
@@ -399,7 +409,7 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
                 HitMagnitude = Vector2.Distance(GrabPos, EndTouchLocation);
 
 
-//                DrawLaunchLine();
+                DrawLaunchLine();
 
                 return;
             }
@@ -577,6 +587,7 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
     {
         transform.position = LaunchLocation;
         GolfBall_Rb.velocity = new Vector3(0, 0, 0);
+        GolfBall_Rb.angularVelocity = new Vector3(0, 0, 0);
     }
 
 
@@ -590,13 +601,7 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
         }
     }
 
-    private void OnMainMenu() 
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            SceneManager.LoadScene(0);
-        }
-    }
+
 
     #endregion
 
@@ -642,6 +647,8 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
 
         bBallGrabbed = false; 
     }
+
+    public void OnBallReady() { bBallReady = true; }
 
     #endregion
 }
