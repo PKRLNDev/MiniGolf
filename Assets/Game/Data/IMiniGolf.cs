@@ -7,6 +7,8 @@ using UnityEngine;
 
     #region GameEvents
 
+        void LevelStart() { }
+
         void BallStay(bool bShouldStop, int StayLimit) { }
 
         void BallBounce() { }

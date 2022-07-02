@@ -166,10 +166,40 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
     /// </summary>
     private void GetCameraMan() {  if (GameObject.FindGameObjectWithTag("CameraManager").TryGetComponent(out IMiniGolf _CameraMan)) { CameraManager = _CameraMan; } }
     #endregion
-
-
+    
     #region Helpers
 
+
+    private void AimAtHorizon()
+    {
+        GolfBall_LookAt_Camera_Transform.LookAt(new Vector3(Camera_Transform.position.x, GolfBall_LookAt_Camera_Transform.position.y, Camera_Transform.position.z));
+    }
+
+
+    /// <summary>
+    /// Drags LookAtPoint Along
+    /// </summary>
+    private void PullLookAtActorToGolfBall()
+    {
+        GolfBall_LookAt_Camera_Transform.position = Original_GolfBall_Transform.position;
+    }
+
+
+
+
+    public void CalcPower(float Power_Sensitivity)
+    {
+        Power_Effectivity = Power_Sensitivity;
+        HitMagnitude = Power_Effectivity * Club_Max_Power;
+    }
+
+
+
+
+
+    #endregion
+
+    #region Movement
 
     /// <summary>
     /// Gets RigidBody LinearVelocity
@@ -179,7 +209,7 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
     {
         return GolfBall_Rb.velocity.sqrMagnitude;
     }
-    
+
     /// <summary>
     /// Gets RigidBody AngularVelocity
     /// </summary>
@@ -195,7 +225,7 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
 
         if (GetLinearVelocity() <= GolfBall_StopSpeed)
         {
-            if (!bStuck && bBallReady && bMoving) { UiInterface.OnBallReady(); Debug.LogWarning("BallReady");  }
+            if (!bStuck && bBallReady && bMoving) { UiInterface.OnBallReady(); Debug.LogWarning("BallReady"); }
             bMoving = false;
             //bool_GolfBall_isShot = false;
             LocalData.bMoving = false;
@@ -238,18 +268,6 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
         GolfBall_Rb.drag = DefaultDrag;
     }
 
-    private void AimAtHorizon()
-    {
-        GolfBall_LookAt_Camera_Transform.LookAt(new Vector3(Camera_Transform.position.x, GolfBall_LookAt_Camera_Transform.position.y, Camera_Transform.position.z));
-    }
-
-    /// <summary>
-    /// Drags LookAtPoint Along
-    /// </summary>
-    private void PullLookAtActorToGolfBall()
-    {
-        GolfBall_LookAt_Camera_Transform.position = Original_GolfBall_Transform.position;
-    }
 
     /// <summary>
     /// Check if grounded.
@@ -273,6 +291,12 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
             }
         }
     }
+
+
+    #endregion
+
+    #region Audio
+
 
     private void PlayAudio()
     {
@@ -339,29 +363,20 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
         ///////////////  Play GolfBall Rolling Sound //////////////////
     }
 
+
+    /// <summary>
+    /// Adjust roll pitch
+    /// lerp between 0.6 and 0.3 , max 8k, min <10
+    /// </summary>
     private void AdjustRollingPitch()
     {
-        Golf_Ball_Rolling_Audio_Pitch = 0.25f + (GetAngularVelocity() * 0.0000375f);         //lerp between 0.6 and 0.3 , max 8k, min <10
+        Golf_Ball_Rolling_Audio_Pitch = 0.25f + (GetAngularVelocity() * 0.0000375f);
         Golf_Ball_Rolling_Audio_Pitch = Mathf.Clamp(Golf_Ball_Rolling_Audio_Pitch, 0.25f, 0.7f);
         AudioComp.Set_Golf_Roll_Pitch(Golf_Ball_Rolling_Audio_Pitch);
     }
 
 
-    public void CalcPower(float Power_Sensitivity)
-    {
-        Power_Effectivity = Power_Sensitivity;
-        HitMagnitude = Power_Effectivity * Club_Max_Power;
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawRay(GolfBall_LookAt_Camera_Transform.position, -GolfBall_LookAt_Camera_Transform.forward * 2);
-        Gizmos.DrawWireSphere(GolfBall_LookAt_Camera_Transform.position, Sphere_Overlap_Radius);
-    }
-
     #endregion
-
 
     #region Functions
 
@@ -619,11 +634,14 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
         }
     }
 
-
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(GolfBall_LookAt_Camera_Transform.position, -GolfBall_LookAt_Camera_Transform.forward * 2);
+        Gizmos.DrawWireSphere(GolfBall_LookAt_Camera_Transform.position, Sphere_Overlap_Radius);
+    }
 
     #endregion
-
-
 
     #region MiniGolfInterface
     public void BallStay(bool bShouldStop, int StayLimit) 
@@ -668,5 +686,7 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
     public void OnBallReady() { bBallReady = true; }
 
     #endregion
+
+
 }
 

@@ -1,22 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class MainMenuUi : MonoBehaviour
 {
 
 
-    public void OnNewGame() 
-    {
-        SceneManager.LoadScene("1");
-    }
 
-    public void OnLevelSelected(int LevelId) 
+    public void OnLevelSelected(string LevelName) 
     {
 
+        if (Sc_GameInstance.GameInstance!=null)
+        {
 
-        SceneManager.LoadScene(LevelId);
+            if (!Sc_GameInstance.GameInstance.GetLevelLoading(LevelName))
+            {
+
+                Sc_GameInstance.GameInstance.StartLevelLoad(LevelName);
+                
+                return;
+            }
+            
+        }
+
+        Debug.Log("GAME INSTANCE IS NULL");
     }
 
 }

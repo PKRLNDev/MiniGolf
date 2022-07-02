@@ -96,6 +96,8 @@ public class Sc_GameMode : MonoBehaviour, IMiniGolf
     {
         GetCameraInterface();
         Debug.LogWarning("Active ball Count = " + GetActiveBallCount().ToString());
+    
+        LevelStart();
     }
 
 
@@ -118,7 +120,16 @@ public class Sc_GameMode : MonoBehaviour, IMiniGolf
     {
         UiInterface.UpdateScore(HitCount);
     }
+    
+    public async void LevelStart() 
+    {
+        await System.Threading.Tasks.Task.Delay(200);
+        UiInterface.LevelStart();
+    }
 
     #endregion
+
+
+
 
 }
