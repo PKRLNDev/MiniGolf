@@ -56,7 +56,7 @@ MonoBehaviour:
   Original_GolfBall_Transform: {fileID: 6315052207637255329}
   GolfBall_LookAt_Camera_Transform: {fileID: 3845874463625729655}
   LineRenderer_GO: {fileID: 8393564297971693183}
-  Club_Max_Power: 2
+  Club_Max_Power: 3
   GolfBall_Speed_Decrasing_Velocity: 0.2
   Brake_Angular_Drag: 3
   CollidableLayers:
@@ -72,7 +72,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3808159488444160517}
-  m_Mesh: {fileID: 4711208715938537054, guid: 77b996348550b0a4fa9284eff9c84345, type: 3}
+  m_Mesh: {fileID: -2955123785533827994, guid: 923e6d63da54a3f47a4594aa506ccad9, type: 3}
 --- !u!23 &2061898893151309831
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -93,7 +93,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 78bb8dcfe35c7804580c9c60e1fd17f4, type: 2}
+  - {fileID: 2100000, guid: 2fbf93cb2badf1249bcbfdc61ba3d508, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -188,6 +188,10 @@ PrefabInstance:
       value: 65535
       objectReference: {fileID: 0}
     - target: {fileID: 3844234870069252729, guid: f1e6f2d610d16c446a9a672194b03d67, type: 3}
+      propertyPath: m_Parameters.colorGradient.key0.a
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3844234870069252729, guid: f1e6f2d610d16c446a9a672194b03d67, type: 3}
       propertyPath: m_Parameters.colorGradient.key0.b
       value: 0.1462264
       objectReference: {fileID: 0}
@@ -198,6 +202,10 @@ PrefabInstance:
     - target: {fileID: 3844234870069252729, guid: f1e6f2d610d16c446a9a672194b03d67, type: 3}
       propertyPath: m_Parameters.colorGradient.key0.r
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3844234870069252729, guid: f1e6f2d610d16c446a9a672194b03d67, type: 3}
+      propertyPath: m_Parameters.colorGradient.key1.a
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3844234870069252729, guid: f1e6f2d610d16c446a9a672194b03d67, type: 3}
       propertyPath: m_Parameters.colorGradient.key1.b

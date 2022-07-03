@@ -52,6 +52,7 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
     private bool bool_GolfBall_Shoot_Sound_isPlayed = true;
     private bool bool_GolfBall_Rolling_Sound_isPlayed = false;
     private bool bBallReady = false;
+    private bool bSunk = false;
 
     #endregion
 
@@ -226,7 +227,7 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
 
         if (GetLinearVelocity() <= GolfBall_StopSpeed)
         {
-            if (!bStuck && bBallReady && bMoving) { UiInterface.OnBallReady(); Debug.LogWarning("BallReady"); }
+            if (!bStuck && bBallReady && bMoving && !bSunk) { UiInterface.OnBallReady(); Debug.LogWarning("BallReady"); }
             bMoving = false;
             //bool_GolfBall_isShot = false;
             LocalData.bMoving = false;
@@ -535,7 +536,7 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
         if (gameObject.tag=="UnSunkBall")
         {
             gameObject.tag = "Untagged";
-
+            bSunk = true;
             
             if (GameObject.FindGameObjectWithTag("GameMode").TryGetComponent(out IMiniGolf GameMode))
             {

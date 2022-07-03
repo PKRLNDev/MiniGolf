@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class InGameUi : MonoBehaviour, IMiniGolf
 {
@@ -12,8 +13,7 @@ public class InGameUi : MonoBehaviour, IMiniGolf
     
     [SerializeField]
     Cinemachine.CinemachineStateDrivenCamera CameraController;
-    [SerializeField]
-    private Canvas canvas;
+
     [SerializeField]
     private Vector2 StartGrabLocation = new Vector2(0, -195);
 
@@ -37,6 +37,9 @@ public class InGameUi : MonoBehaviour, IMiniGolf
     #region UiReferences
 
     [SerializeField]
+    private Canvas canvas;
+
+    [SerializeField]
     Animator AnimController;
 
     [SerializeField]
@@ -48,6 +51,15 @@ public class InGameUi : MonoBehaviour, IMiniGolf
     [SerializeField]
     private TextMeshProUGUI EndTimeText;
 
+    [SerializeField]
+    private RectTransform HitBar;
+    [SerializeField]
+    private RectTransform PullBar;
+
+    [SerializeField]
+    private Image HitbarImage;
+    [SerializeField]
+    private Image PullbarImage;
     #endregion
 
 
@@ -56,6 +68,10 @@ public class InGameUi : MonoBehaviour, IMiniGolf
         GetBallInterface();
 
         GetCameraInterface();
+
+        HitbarImage = HitBar.gameObject.GetComponent<Image>();
+        PullbarImage = PullBar.gameObject.GetComponent<Image>();
+
     }
 
 
@@ -136,12 +152,21 @@ public class InGameUi : MonoBehaviour, IMiniGolf
 
         BallGrabImage.transform.position = canvas.transform.TransformPoint(OnScreentoCanvasPos(pointerData.position));
 
+        PullBar.position = BallGrabImage.transform.position;
+        
+        RotateBars();
+        ColorBars();
+
+
     }
     
     public void OnBallDragEnded(BaseEventData EventData) 
     {
         BallInterface.OnBallReleased();
         AdjustBallUiPos(StartGrabLocation);
+
+        HitbarImage.color = new Color32(0, 0, 0, 0);
+        PullbarImage.color = new Color32(0, 0, 0, 0);
     }
 
 
@@ -156,4 +181,29 @@ public class InGameUi : MonoBehaviour, IMiniGolf
     public void LevelStart() { PlayUiAnim("LevelLoadAnim"); }
     #endregion
 
+
+    private void RotateBars() 
+    {
+
+        float angle = -Mathf.Atan2(HitBar.anchoredPosition.x - PullBar.anchoredPosition.x, HitBar.anchoredPosition.y - PullBar.anchoredPosition.y) * Mathf.Rad2Deg;
+        HitBar.rotation = Quaternion.Euler(0, 0, angle);
+        PullBar.rotation = Quaternion.Euler(0, 0, angle);   
+
+    }
+
+    private void ColorBars() 
+    {
+        float Distance = Vector2.Distance(HitBar.anchoredPosition, PullBar.anchoredPosition);
+
+        Debug.Log(Distance.ToString());
+        Distance = Distance / 350;
+        byte Red = (byte)Mathf.Lerp(155, 255, Distance);
+        byte Green = (byte)Mathf.Lerp(200, 50, Distance/2);
+        byte Blue = (byte)Mathf.Lerp(255, 35, Distance);
+        byte Alpha = (byte)Mathf.Lerp(0, 255, Distance);
+
+        
+        HitbarImage.color = new Color32(Red,Green,Blue,255);
+        PullbarImage.color = new Color32(Red,Green,Blue,255);
+    }
 }
