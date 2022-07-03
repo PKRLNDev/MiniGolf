@@ -416,14 +416,14 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
             Vector3 XyToXZY = new Vector3(XY.x, 0, XY.y);
             // WorldtoLocal
             XyToXZY = Camera_Transform.rotation * XyToXZY;
-
-            GolfBall_Rb.AddForce(XyToXZY, ForceMode.Force);
+            
+            GolfBall_Rb.AddForce(XyToXZY.normalized * HitMagnitude, ForceMode.Force);
 
         }
-        //GolfBall_Rb.AddForce(-GolfBall_LookAt_Camera_Transform.forward * 2, ForceMode.Force);
-        LocalData.bool_GolfBall_isShot = true;
         
-        //bool_Reseting_Power_Slider = true;
+        LocalData.bool_GolfBall_isShot = true;
+
+
         bool_GolfBall_Shoot_Sound_isPlayed = false;
         Shoot_Time_Power_Effectivity = Power_Effectivity;
         BallUnStuck();
@@ -629,7 +629,7 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
         }
     }
     public void BallStuck() { bStuck = true; }
-    public void BallUnStuck() { bStuck = false; }
+    public void BallUnStuck() { bStuck = false; Stay = 0.0f; }
 
     public void BallBounce() { }
 

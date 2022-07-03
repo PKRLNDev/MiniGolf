@@ -37,7 +37,7 @@ public class Behave_Bouncer : MonoBehaviour
         
         collision.gameObject.GetComponent<Rigidbody>().velocity = Vector3.Reflect(collision.gameObject.GetComponent<Rigidbody>().velocity, transform.forward); 
 
-        collision.gameObject.GetComponent<Rigidbody>().AddForce(collision.gameObject.GetComponent<Rigidbody>().velocity * Bounciness + new Vector3(0,1,0) * Jump);
+        collision.gameObject.GetComponent<Rigidbody>().AddForce(collision.gameObject.GetComponent<Rigidbody>().velocity * Bounciness + new Vector3(0,1,0) * Jump + transform.forward*Bounciness);
 
         Speaker.PlayOneShot(Bounce);
     }
