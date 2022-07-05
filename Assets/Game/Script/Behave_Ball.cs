@@ -643,9 +643,13 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
     public void OnBallGrabbed() { bBallGrabbed = true; }
     public void OnBallReleased(float Magnitude) 
     {
-        //HitMagnitude = Magnitude;
-        CalcPower(HitMagnitude);
-        Shoot();
+        
+        if (Magnitude > 0.1)
+        {
+            //HitMagnitude = Magnitude;
+            CalcPower(HitMagnitude);
+            Shoot();
+        }
 
         bBallGrabbed = false; 
     }

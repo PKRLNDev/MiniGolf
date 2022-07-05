@@ -159,7 +159,12 @@ public class InGameUi : MonoBehaviour, IMiniGolf
 
 
     }
-    
+
+    public void OnBallButtonDown(BaseEventData EventData) { BallInterface.OnBallGrabbed(); }
+    public void OnBallButtonUp(BaseEventData EventData) { BallInterface.OnBallReleased(); }
+
+
+
     public void OnBallDragEnded(BaseEventData EventData) 
     {
         BallInterface.OnBallReleased();
