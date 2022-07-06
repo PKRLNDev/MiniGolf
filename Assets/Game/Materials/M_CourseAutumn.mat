@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_CourseWinter
+  m_Name: M_CourseAutumn
   m_Shader: {fileID: 4800000, guid: bf1b67d8223379749a0a88d47d0a7154, type: 3}
   m_ValidKeywords:
   - USE_S
@@ -172,7 +172,7 @@ Material:
     - _GrassSaturation: 0.25
     - _GrassShading: 0.4
     - _GrassThinness: 2.5
-    - _GrassThinnessIntersection: 0.678
+    - _GrassThinnessIntersection: 0.715
     - _LightIntensity: 1
     - _Metallic: 0
     - _Metallic0: 0
@@ -202,7 +202,7 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _TilingN1: 1
+    - _TilingN1: 0.1
     - _TilingN2: 0.05
     - _TilingN3: 0.65
     - _UVSec: 0
@@ -225,14 +225,14 @@ Material:
     - _ZWrite: 1
     - __NumberOfStacks: 17
     m_Colors:
-    - _Color: {r: 0.19824673, g: 0.5705364, b: 0.9339623, a: 1}
+    - _Color: {r: 0.735849, g: 0.57211554, b: 0.36445352, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _GroundColor: {r: 0.227451, g: 0.5568628, b: 0.87843144, a: 1}
+    - _GroundColor: {r: 0.7372549, g: 0.57254905, b: 0.3647059, a: 1}
     - _OffsetVector: {r: 0, g: 0, b: 0, a: 0}
     - _PJShadowColor: {r: 0, g: 0, b: 0, a: 1}
-    - _ProjectedShadowColor: {r: 0.38781595, g: 0.5889252, b: 0.7830189, a: 1}
+    - _ProjectedShadowColor: {r: 0.5568628, g: 0.43137258, b: 0.27450982, a: 1}
     - _RimColor: {r: 0.14566667, g: 0.184, b: 0.09008333, a: 1}
-    - _SelfShadowColor: {r: 0.227451, g: 0.5568628, b: 0.87843144, a: 1}
+    - _SelfShadowColor: {r: 0.5566038, g: 0.4324043, b: 0.2756764, a: 1}
     - _Specular0: {r: 1, g: 1, b: 1, a: 1}
     - _Specular1: {r: 1, g: 1, b: 1, a: 1}
     - _Specular2: {r: 1, g: 1, b: 1, a: 1}
