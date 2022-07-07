@@ -78,7 +78,7 @@ public class InGameUi : MonoBehaviour, IMiniGolf
     private void Start()
     {
         PauseMenuUi.SetActive(false);
-
+        UnPause();
         GetBallInterface();
 
         GetCameraInterface();

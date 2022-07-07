@@ -108,6 +108,8 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
     private void Start()
     {
 
+        LaunchLocation = transform.position;
+
         GetCameraMan();
         GetUi();
         GetGameMode();

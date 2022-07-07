@@ -367,6 +367,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: LevelSelectUi
       objectReference: {fileID: 0}
+    - target: {fileID: 87267484694481064, guid: 14ece3a97b3c9e646b9a256892dbe310, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 192256026872739834, guid: 14ece3a97b3c9e646b9a256892dbe310, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -525,7 +529,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5268943161217807637, guid: 14ece3a97b3c9e646b9a256892dbe310, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -29670
+      value: -31050
       objectReference: {fileID: 0}
     - target: {fileID: 5274297301918294295, guid: 14ece3a97b3c9e646b9a256892dbe310, type: 3}
       propertyPath: m_AnchorMax.y
