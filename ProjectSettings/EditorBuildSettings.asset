@@ -18,6 +18,15 @@ EditorBuildSettings:
     path: Assets/Scenes/Winter/WinterScene_3.unity
     guid: e19dc1f92371d8d469ba4542b3ede636
   - enabled: 1
+    path: Assets/Scenes/Desert/Desert_Easy.unity
+    guid: beeb236a9b54d0f4db138fb52894f552
+  - enabled: 1
+    path: Assets/Scenes/Desert/Desert_Medium.unity
+    guid: b661ff1f543aeb3469b39f96b3995163
+  - enabled: 1
+    path: Assets/Scenes/Desert/Desert_Difficult.unity
+    guid: d7194bcaed3c51643aff029d6643d1b1
+  - enabled: 1
     path: Assets/Scenes/Autumn/AutumnScene_1.unity
     guid: e85b51798f804e547ae042cb8f12d798
   - enabled: 1
