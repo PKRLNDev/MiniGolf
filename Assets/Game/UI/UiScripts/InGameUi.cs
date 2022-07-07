@@ -18,6 +18,9 @@ public class InGameUi : MonoBehaviour, IMiniGolf
     private Vector2 StartGrabLocation = new Vector2(0, -195);
 
     private bool bExitReady = false;
+    private bool bPaused = false;
+    private bool bLevelSelect = false;
+    private bool bEndGame = false;
 
     #endregion
 
@@ -27,6 +30,10 @@ public class InGameUi : MonoBehaviour, IMiniGolf
     private GameObject BallGrabImage;
     [SerializeField]
     private GameObject Ball;
+    [SerializeField]
+    private AudioSource Speaker;
+    [SerializeField]
+    private AudioClip ClickSound;
 
     private IMiniGolf BallInterface;
     private IMiniGolf CameraInterface;
@@ -35,6 +42,11 @@ public class InGameUi : MonoBehaviour, IMiniGolf
     #endregion
 
     #region UiReferences
+
+    [SerializeField]
+    private GameObject PauseMenuUi;
+    [SerializeField]
+    private GameObject LevelSelectUi;
 
     [SerializeField]
     private Canvas canvas;
@@ -65,6 +77,8 @@ public class InGameUi : MonoBehaviour, IMiniGolf
 
     private void Start()
     {
+        PauseMenuUi.SetActive(false);
+
         GetBallInterface();
 
         GetCameraInterface();
@@ -72,8 +86,33 @@ public class InGameUi : MonoBehaviour, IMiniGolf
         HitbarImage = HitBar.gameObject.GetComponent<Image>();
         PullbarImage = PullBar.gameObject.GetComponent<Image>();
 
+        PauseMenuUi.SetActive(false);
+        //LevelSelectUi.GetComponent<Animator>().Play("LevelSelectAway");
+
+
     }
 
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+
+            if (bLevelSelect)
+            {
+                BTN_LevelSelect();
+                return;
+            }
+            if (bEndGame)
+            {
+                BTN_MainMenu();
+                return;
+            }
+            BTN_Pause();
+        }
+
+
+    }
 
     #region Get
     private bool GetBallInterface() { if (Ball.TryGetComponent(out IMiniGolf _BallInterface)) { BallInterface = _BallInterface; return true; } return false; }
@@ -93,7 +132,7 @@ public class InGameUi : MonoBehaviour, IMiniGolf
     public void PlayUiAnim(string AnimName) { if (AnimController) { AnimController.Play(AnimName); } }
     public void PlayUiAnim(string AnimName, int Layer) { if (AnimController) { AnimController.Play(AnimName, Layer); } }
 
-    public void EndGameOpen() { AnimController.Play("EndGameUiComeAnim", 1); } //AnimController.SetBool("bOpenEndUi", true); AnimController.Play("EndGameUiComeAnim", 1);
+    public void EndGameOpen() { AnimController.Play("EndGameUiComeAnim", 1); bEndGame = true; } //AnimController.SetBool("bOpenEndUi", true); AnimController.Play("EndGameUiComeAnim", 1);
     public void EndGameClose() { AnimController.Play("EndGameUiGoAnim", 1); }
 
     public void UpdateScore(int HitCount) { ScoreText.text = HitCount.ToString(); }
@@ -115,16 +154,93 @@ public class InGameUi : MonoBehaviour, IMiniGolf
     #region Buttons
 
     // TODO Add LevelSelect
-    public void BTN_MainMenu() { SceneManager.LoadScene(0); }
-    public void BTN_LevelSelect() { SceneManager.LoadScene(0); }
-    public void BTN_NextLevel() { SceneManager.LoadScene(1); }
-
-    public void BTN_Pause() 
+    public void BTN_MainMenu() { UnPause(); SceneManager.LoadScene(0); }
+    public void BTN_LevelSelect() 
     {
+        UnPause(); 
+
+        if (bLevelSelect)
+        {
+            bLevelSelect = false;
+            LevelSelectUi.GetComponent<Animator>().Play("LevelSelectAway");
+            if (bEndGame)
+            {
+                EndGameOpen();
+                return;
+            }
+            PauseMenuUi.SetActive(true);
+            Pause();
+            return;
+        }
+
+        
+        LevelSelectUi.GetComponent<Animator>().Play("LevelSelectStay");
+        bLevelSelect = true;
+        if (bEndGame)
+        {
+            EndGameClose();
+            return;
+        }
+        PauseMenuUi.SetActive(false);
+        Pause();
+    }
+    public void BTN_NextLevel() 
+    {
+        UnPause();
+        if (SceneManager.GetActiveScene().buildIndex < 5)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            return;
+        }
+        
+        SceneManager.LoadScene(0); 
 
     }
 
+    public void BTN_Pause() 
+    {
+        if (bLevelSelect)
+        {
+            UnPause();
+            LevelSelectUi.GetComponent<Animator>().Play("LevelSelectAway");
+            bLevelSelect = false;
+        }
 
+        if (PauseMenuUi.activeInHierarchy)
+        {
+            PauseMenuUi.SetActive(false);
+            UnPause();
+            return;
+        }
+
+
+        if (bEndGame)
+        {
+            EndGameOpen();
+            return;
+        }
+
+        PauseMenuUi.SetActive(true);
+        Pause();
+
+
+    }
+
+    public void Pause() 
+    {
+        Time.timeScale = 0;
+        bPaused = true;
+    }
+    public void UnPause() 
+    {
+        Time.timeScale = 1;
+        bPaused = false;
+    }
+
+    public void OnAnyButton()
+    {
+        Speaker.PlayOneShot(ClickSound);
+    }
 
     #endregion
 
@@ -160,7 +276,12 @@ public class InGameUi : MonoBehaviour, IMiniGolf
 
     }
 
-    public void OnBallButtonDown(BaseEventData EventData) { BallInterface.OnBallGrabbed(); }
+    public void OnBallButtonDown(BaseEventData EventData) 
+    {
+
+       BallInterface.OnBallGrabbed(); 
+
+    }
     public void OnBallButtonUp(BaseEventData EventData) { BallInterface.OnBallReleased(); }
 
 

@@ -19,12 +19,9 @@ public class Sc_GameMode : MonoBehaviour, IMiniGolf
     #endregion
 
 
-    private void Update()
-    {
-        OnMainMenu();
-    }
-
-
+    /// <summary>
+    /// DEPRECATED
+    /// </summary>
     private void OnMainMenu()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
