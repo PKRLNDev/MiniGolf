@@ -25,6 +25,8 @@ public class LevelSelectUi : MonoBehaviour
     public void MenuCome() { animMan.SetTrigger("Come"); }
     public void MenuComeToGo() { animMan.SetTrigger("ComeToGo"); }
     public void MenuGo() { animMan.SetTrigger("StayToGo"); }
+
+
     public void OnLevelSelected(string LevelName)
     {
         SceneManager.LoadScene(LevelName);

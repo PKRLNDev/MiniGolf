@@ -187,7 +187,7 @@ public class InGameUi : MonoBehaviour, IMiniGolf
     public void BTN_NextLevel() 
     {
         UnPause();
-        if (SceneManager.GetActiveScene().buildIndex < 5)
+        if (SceneManager.GetActiveScene().buildIndex < SceneManager.sceneCountInBuildSettings-1)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
             return;
