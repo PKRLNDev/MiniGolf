@@ -271,7 +271,13 @@ public class InGameUi : MonoBehaviour, IMiniGolf
         PullBar.position = BallGrabImage.transform.position;
         
         RotateBars();
-        ColorBars();
+
+
+
+        Color32 newCol = LerpColor();
+
+        BallInterface.HitMagnitudeToColor(newCol);
+        ColorBars(newCol);
 
 
     }
@@ -279,10 +285,11 @@ public class InGameUi : MonoBehaviour, IMiniGolf
     public void OnBallButtonDown(BaseEventData EventData) 
     {
 
-       BallInterface.OnBallGrabbed(); 
+       BallInterface.OnBallGrabbed();
+       BallInterface.ActivateTrajectory(true);
 
     }
-    public void OnBallButtonUp(BaseEventData EventData) { BallInterface.OnBallReleased(); }
+    public void OnBallButtonUp(BaseEventData EventData) { BallInterface.OnBallReleased(); BallInterface.ActivateTrajectory(false); }
 
 
 
@@ -317,19 +324,23 @@ public class InGameUi : MonoBehaviour, IMiniGolf
 
     }
 
-    private void ColorBars() 
+    private void ColorBars(Color32 NewColor) 
+    {
+        HitbarImage.color = NewColor;
+        PullbarImage.color = NewColor;
+    }
+
+    private Color32 LerpColor() 
     {
         float Distance = Vector2.Distance(HitBar.anchoredPosition, PullBar.anchoredPosition);
 
         Debug.Log(Distance.ToString());
         Distance = Distance / 350;
-        byte Red = (byte)Mathf.Lerp(155, 255, Distance);
-        byte Green = (byte)Mathf.Lerp(200, 50, Distance/2);
-        byte Blue = (byte)Mathf.Lerp(255, 35, Distance);
-        byte Alpha = (byte)Mathf.Lerp(0, 255, Distance);
+        byte Red = (byte)Mathf.Lerp(55, 255, Distance);
+        byte Green = (byte)Mathf.Lerp(200, 25, Distance / 2);
+        byte Blue = (byte)Mathf.Lerp(255, 55, Distance);
+        //byte Alpha = (byte)Mathf.Lerp(0, 255, Distance);
 
-        
-        HitbarImage.color = new Color32(Red,Green,Blue,255);
-        PullbarImage.color = new Color32(Red,Green,Blue,255);
+        return new Color32(Red, Green, Blue, 255);
     }
 }

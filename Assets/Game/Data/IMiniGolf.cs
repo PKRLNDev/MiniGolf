@@ -7,6 +7,13 @@ using UnityEngine;
 
     #region GameEvents
 
+
+    void SetTrajectoryRotation(Quaternion NewRotation) { }
+    void HitMagnitudeToScale(float HitMagnitude) { }
+    void HitMagnitudeToColor(Color32 NewColor) { }
+
+    void ActivateTrajectory(bool bActive) { }
+
         void LevelStart() { }
 
         void BallStay(bool bShouldStop, int StayLimit) { }

@@ -15,8 +15,8 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
     private LineRenderer LineRenderer;
     [SerializeField]
     private Transform Camera_Transform, Original_GolfBall_Transform, GolfBall_LookAt_Camera_Transform;
-    [SerializeField]
-    private GameObject LineRenderer_GO;
+    //[SerializeField]
+    //private GameObject LineRenderer_GO;
     //[SerializeField]
     //private Slider Power_Slider;
     [SerializeField]
@@ -96,6 +96,9 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
 
     private IMiniGolf GMInterface;
 
+    private IMiniGolf TrajectoryInterface;
+    public GameObject TrajectoryLine;
+    
     [SerializeField]
     private ParticleSystem HitEffect;
 
@@ -113,6 +116,9 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
         GetCameraMan();
         GetUi();
         GetGameMode();
+        GetTrajectoryInt();
+
+
 
         GolfBall_Rb = GetComponent<Rigidbody>();
 
@@ -169,6 +175,10 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
     /// Gets IminiGolf Cameraman reference
     /// </summary>
     private void GetCameraMan() {  if (GameObject.FindGameObjectWithTag("CameraManager").TryGetComponent(out IMiniGolf _CameraMan)) { CameraManager = _CameraMan; } }
+
+    private void GetTrajectoryInt() { if (TrajectoryLine.TryGetComponent(out IMiniGolf TRInt)) { TrajectoryInterface = TRInt; } }
+
+
     #endregion
     
     #region Helpers
@@ -186,6 +196,7 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
     private void PullLookAtActorToGolfBall()
     {
         GolfBall_LookAt_Camera_Transform.position = Original_GolfBall_Transform.position;
+        TrajectoryLine.transform.position = Original_GolfBall_Transform.position - new Vector3(0.0f,0.05f,0.0f);
     }
 
 
@@ -403,27 +414,21 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
     public void Shoot()
     {
 
-        if (TraceForGround().HasValue)
-        {
-            HitEffect.transform.position = transform.position;
-            HitEffect.Play();
-            HitCount++;
 
-            LaunchLocation = transform.position;
-            GMInterface.UpdateScore(HitCount);
+        HitEffect.transform.position = transform.position;
+        HitEffect.Play();
+        HitCount++;
+
+        LaunchLocation = transform.position;
+        GMInterface.UpdateScore(HitCount);
 
 
-            // OnScreen Calculation
-            Vector2 XY = GrabPos - EndTouchLocation;     
-            // OnScreenToWorld
-            Vector3 XyToXZY = new Vector3(XY.x, 0, XY.y);
-            // WorldtoLocal
-            XyToXZY = Camera_Transform.rotation * XyToXZY;
-            
-            GolfBall_Rb.AddForce(XyToXZY.normalized * HitMagnitude, ForceMode.Force);
 
-        }
         
+        GolfBall_Rb.AddForce(CalculateHitDirection() * HitMagnitude, ForceMode.Force);
+
+
+
         LocalData.bool_GolfBall_isShot = true;
 
 
@@ -431,6 +436,20 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
         Shoot_Time_Power_Effectivity = Power_Effectivity;
         BallUnStuck();
         ResetDrag();
+    }
+
+    private Vector3 CalculateHitDirection() 
+    {
+        // OnScreen Calculation
+        Vector2 XY = GrabPos - EndTouchLocation;
+        // OnScreenToWorld
+        Vector3 XyToXZY = new Vector3(XY.x, 0, XY.y);
+        // WorldtoLocal
+        XyToXZY =  Camera_Transform.rotation * XyToXZY;
+        // LocalToFlat
+        XyToXZY = new Vector3(XyToXZY.x,0, XyToXZY.z);
+
+        return XyToXZY.normalized;
     }
 
 
@@ -450,8 +469,9 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
                 EndTouchLocation = Input.mousePosition;
                 HitMagnitude = Vector2.Distance(GrabPos, EndTouchLocation);
 
-
-                DrawLaunchLine();
+                TrajectoryInterface.SetTrajectoryRotation(Quaternion.LookRotation(CalculateHitDirection(), Vector3.up));
+                TrajectoryInterface.HitMagnitudeToScale(HitMagnitude);
+                
 
                 return;
             }
@@ -463,7 +483,6 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
                 GrabPos = new Vector2(Input.mousePosition.x, Input.mousePosition.y) - GrabPos;
 
                 CinemachineRig.m_XAxis.Value += GrabPos.x * Time.deltaTime * 90.0f;
-                //CinemachineRig.m_YAxis.Value += GrabPos.y * Time.deltaTime * 0.5f;
 
                 GrabPos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
                 return;
@@ -482,9 +501,8 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
             {
                 CalcPower(HitMagnitude);
                 Shoot();
-
+            
                 bBallGrabbed = false;
-                LineRenderer_GO.SetActive(false);
             }
             // CLEAR DRAG OPERATION
             DraggingCamera = false;
@@ -548,33 +566,7 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
         CameraManager.PlayCamAnim("FarCamera");
     }
 
-    /// <summary>
-    /// Draws Launch Line from Pointer to Ball
-    /// </summary>
-    private void DrawLaunchLine()
-    {
-        if (TraceForGround().HasValue)
-        {
-            if (!LineRenderer_GO.activeInHierarchy)
-            {
-                LineRenderer_GO.SetActive(true);
-            }
-    
 
-            LineRenderer.SetPosition(0, transform.position-new Vector3(0,0.05f,0));
-            LineRenderer.SetPosition(1, Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane)));
-
-
-
-            return;
-        }
-
-        if (LineRenderer_GO.activeInHierarchy)
-        {
-            LineRenderer_GO.SetActive(false);
-        }
-
-    }
     
     /// <summary>
     /// Set actor location to initial launching position
@@ -646,21 +638,57 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
     public void OnBallReleased(float Magnitude) 
     {
         
-        if (Magnitude > 0.1)
-        {
-            //HitMagnitude = Magnitude;
-            CalcPower(HitMagnitude);
-            Shoot();
-        }
+        //if (Magnitude > 0.1)
+        //{
+        //    //HitMagnitude = Magnitude;
+        //    CalcPower(HitMagnitude);
+        //    Shoot();
+        //}
 
         bBallGrabbed = false; 
     }
 
     public void OnBallReady() { bBallReady = true; }
 
+    public void HitMagnitudeToColor(Color32 NewColor) { TrajectoryInterface.HitMagnitudeToColor(NewColor); }
+
+    public void ActivateTrajectory(bool bActive) { TrajectoryInterface.ActivateTrajectory(bActive); }
+
     #endregion
 
     #region DEPRECATED
+
+    /// <summary>
+    /// 
+    /// DEPRECATED
+    /// Draws Launch Line from Pointer to Ball
+    /// </summary>
+    //private void DrawLaunchLine()
+    //{
+    //    if (TraceForGround().HasValue)
+    //    {
+    //        if (!LineRenderer_GO.activeInHierarchy)
+    //        {
+    //            LineRenderer_GO.SetActive(true);
+    //        }
+
+
+    //        LineRenderer.SetPosition(0, transform.position - new Vector3(0, 0.05f, 0));
+    //        LineRenderer.SetPosition(1, Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane)));
+
+
+
+    //        return;
+    //    }
+
+    //    if (LineRenderer_GO.activeInHierarchy)
+    //    {
+    //        LineRenderer_GO.SetActive(false);
+    //    }
+
+    //}
+
+
 
     /// <summary>
     /// DEPRECATED returns world location of ball if we are grabbing ball.

@@ -21,10 +21,16 @@ public class Behave_Hole : MonoBehaviour, IMiniGolf
 
 
 
+    private void Awake()
+    {
+        
+    }
+
     private void OnTriggerEnter(Collider other)
     {
+
         if (other.gameObject.TryGetComponent(out IMiniGolf Ball))
-        {            
+        {
             Circle.Play();
             Hit.Play();
             Ball.BallSunk();
