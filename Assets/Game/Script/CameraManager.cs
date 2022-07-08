@@ -28,7 +28,7 @@ public class CameraManager : MonoBehaviour, IMiniGolf
     // Update is called once per frame
     void Update()
     {
-
+        /*
         // DEBUGINPUT
         if (Input.GetKeyDown(KeyCode.F))
         {
@@ -43,6 +43,8 @@ public class CameraManager : MonoBehaviour, IMiniGolf
         {
             PlayCamAnim("FarCamera");
         }
+
+        */
     }
 
 

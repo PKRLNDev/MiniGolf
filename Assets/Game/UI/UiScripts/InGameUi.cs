@@ -260,7 +260,7 @@ public class InGameUi : MonoBehaviour, IMiniGolf
     }
 
 
-    public void OnBallDragStart(BaseEventData EventData) { BallInterface.OnBallGrabbed(); PlayUiAnim("BallGrabGo",2); /**/ Debug.LogWarning("BallDragStart"); }
+    public void OnBallDragStart(BaseEventData EventData) { BallInterface.OnBallGrabbed(); PlayUiAnim("BallGrabGo",2); /* Debug.LogWarning("BallDragStart");*/ }
 
     public void OnBallDrag(BaseEventData EventData)
     {
@@ -334,7 +334,7 @@ public class InGameUi : MonoBehaviour, IMiniGolf
     {
         float Distance = Vector2.Distance(HitBar.anchoredPosition, PullBar.anchoredPosition);
 
-        Debug.Log(Distance.ToString());
+        //Debug.Log(Distance.ToString());
         Distance = Distance / 350;
         byte Red = (byte)Mathf.Lerp(55, 255, Distance);
         byte Green = (byte)Mathf.Lerp(200, 25, Distance / 2);

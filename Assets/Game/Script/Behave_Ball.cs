@@ -153,7 +153,7 @@ public class Behave_Ball : MonoBehaviour, IMiniGolf
         GrabPull();
 
         //DEBUGINPUT
-        OnReset();
+        //OnReset();
 
     }
 
