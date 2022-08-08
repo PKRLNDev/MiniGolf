@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -75,6 +73,12 @@ public class InGameUi : MonoBehaviour, IMiniGolf
     #endregion
 
 
+    /// <summary>
+    /// Clears possible paused state
+    /// Gets PlayerBall
+    /// Gets PlayerCamera
+    /// SetsUp Ui references
+    /// </summary>
     private void Start()
     {
         PauseMenuUi.SetActive(false);
@@ -86,13 +90,13 @@ public class InGameUi : MonoBehaviour, IMiniGolf
         HitbarImage = HitBar.gameObject.GetComponent<Image>();
         PullbarImage = PullBar.gameObject.GetComponent<Image>();
 
-        PauseMenuUi.SetActive(false);
         //LevelSelectUi.GetComponent<Animator>().Play("LevelSelectAway");
-
 
     }
 
-
+    /// <summary>
+    /// Check if buttons clicked
+    /// </summary>
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -115,29 +119,82 @@ public class InGameUi : MonoBehaviour, IMiniGolf
     }
 
     #region Get
+    /// <summary>
+    /// Gets KnownBall
+    /// </summary>
+    /// <returns></returns>
     private bool GetBallInterface() { if (Ball.TryGetComponent(out IMiniGolf _BallInterface)) { BallInterface = _BallInterface; return true; } return false; }
-
+    /// <summary>
+    /// Gets MainCamera
+    /// </summary>
+    /// <returns></returns>
     private bool GetCameraInterface() { if (CameraController.TryGetComponent(out IMiniGolf _CameraInterface))  { CameraInterface = _CameraInterface; return true; }  return false; }
-
+    /// <summary>
+    /// Gets if Ui is ready to exit
+    /// </summary>
+    /// <returns></returns>
     public bool GetExitReady() { return bExitReady; }
-
+    /// <summary>
+    /// Sets Ui exit status
+    /// </summary>
     public void EndGame() { bExitReady = true; }
 
     #endregion
 
     #region UIManagement
-
+    /// <summary>
+    /// Sends command to CameraManager through Ui to play given player camera anims
+    /// Not Used by UiItself rather streamlines process through game objects
+    /// </summary>
+    /// <param name="AnimName"></param>
     public void PlayCamAnim(string AnimName) { if (CameraInterface != null || GetCameraInterface() ) { CameraInterface.PlayCamAnim(AnimName); }  }
+    /// <summary>
+    /// Sends command to CameraManager through Ui to play given player camera anim on given animation layer
+    /// Not Used by UiItself rather streamlines process through game objects
+    /// </summary>
+    /// <param name="AnimName"></param>
+    /// <param name="Layer"></param>
     public void PlayCamAnim(string AnimName, int Layer) { if (CameraInterface != null || GetCameraInterface() ) { CameraInterface.PlayCamAnim(AnimName,Layer); }  }
+
+    /// <summary>
+    /// Plays given Ui Animation
+    /// </summary>
+    /// <param name="AnimName"></param>
     public void PlayUiAnim(string AnimName) { if (AnimController) { AnimController.Play(AnimName); } }
+    /// <summary>
+    /// Plays given Ui Anim on given AnimLayer
+    /// </summary>
+    /// <param name="AnimName"></param>
+    /// <param name="Layer"></param>
     public void PlayUiAnim(string AnimName, int Layer) { if (AnimController) { AnimController.Play(AnimName, Layer); } }
 
-    public void EndGameOpen() { AnimController.Play("EndGameUiComeAnim", 1); bEndGame = true; } //AnimController.SetBool("bOpenEndUi", true); AnimController.Play("EndGameUiComeAnim", 1);
+    /// <summary>
+    /// Opens EndGame Ui
+    /// </summary>
+    public void EndGameOpen() { AnimController.Play("EndGameUiComeAnim", 1); bEndGame = true; } 
+    /// <summary>
+    /// Closes EndGameUi
+    /// </summary>
     public void EndGameClose() { AnimController.Play("EndGameUiGoAnim", 1); }
 
+    /// <summary>
+    /// Updates PlayerScore on screen
+    /// </summary>
+    /// <param name="HitCount"></param>
     public void UpdateScore(int HitCount) { ScoreText.text = HitCount.ToString(); }
+
+    /// <summary>
+    /// Updates ScoreText
+    /// </summary>
+    /// <param name="NewText"></param>
     public void UpdateText(string NewText) { ScoreText.text = NewText; }
  
+    /// <summary>
+    /// Sets score one last time
+    /// Calculates and sets LevelPlayTime
+    /// Opens EndGameUi
+    /// </summary>
+    /// <param name="HitCount"></param>
     public void OnGameEnded(int HitCount) 
     { 
         EndScoreText.text = EndScoreText.text + HitCount.ToString(); 
@@ -145,16 +202,24 @@ public class InGameUi : MonoBehaviour, IMiniGolf
         EndGameOpen(); 
     }
 
-    //public void PlayBallGrabGo() { AnimController.Play("BallGrabGo"); }
-    //public void PlayBallGrabCome() { AnimController.Play("BallGrabCome"); }
 
     #endregion
 
 
     #region Buttons
 
-    // TODO Add LevelSelect
+
+    /// <summary>
+    /// Unpause in case game was paused
+    /// Loads scene 0 = MainMenu Level
+    /// </summary>
     public void BTN_MainMenu() { UnPause(); SceneManager.LoadScene(0); }
+
+    /// <summary>
+    /// Unpause in case game was paused
+    /// if LevelSelect is already open = Close LevelSelectMenu
+    /// if LevelSelect is not open = Open LevelSelectMenu
+    /// </summary>
     public void BTN_LevelSelect() 
     {
         UnPause(); 
@@ -184,6 +249,13 @@ public class InGameUi : MonoBehaviour, IMiniGolf
         PauseMenuUi.SetActive(false);
         Pause();
     }
+
+    /// <summary>
+    /// Unpause incase game was paused
+    /// Check CurrentLevel index
+    /// if LastLevel go to MainMenuLevel
+    /// if notLastLevel go to NextLevel
+    /// </summary>
     public void BTN_NextLevel() 
     {
         UnPause();
@@ -196,7 +268,10 @@ public class InGameUi : MonoBehaviour, IMiniGolf
         SceneManager.LoadScene(0); 
 
     }
-
+    /// <summary>
+    /// Sets game paused
+    /// safe Pause button regarding what menu we are in.
+    /// </summary>
     public void BTN_Pause() 
     {
         if (bLevelSelect)
@@ -225,18 +300,29 @@ public class InGameUi : MonoBehaviour, IMiniGolf
 
 
     }
-
+    /// <summary>
+    /// Set timescale 0.
+    /// good for our use
+    /// </summary>
     public void Pause() 
     {
         Time.timeScale = 0;
         bPaused = true;
     }
+
+    /// <summary>
+    /// Set timescale 1.
+    /// good for our use
+    /// </summary>
     public void UnPause() 
     {
         Time.timeScale = 1;
         bPaused = false;
     }
-
+    /// <summary>
+    /// PlayButtonSound
+    /// Add Button effects here.
+    /// </summary>
     public void OnAnyButton()
     {
         Speaker.PlayOneShot(ClickSound);
@@ -245,6 +331,11 @@ public class InGameUi : MonoBehaviour, IMiniGolf
     #endregion
 
     #region DragShoot
+    /// <summary>
+    /// Convert OnScreen Position to CanvasPosition for scaling issues
+    /// </summary>
+    /// <param name="OnScreenPos"></param>
+    /// <returns></returns>
     private Vector2 OnScreentoCanvasPos(Vector2 OnScreenPos)
     {
 
@@ -259,9 +350,20 @@ public class InGameUi : MonoBehaviour, IMiniGolf
         return CanvasPosition;
     }
 
-
+    /// <summary>
+    /// Notify ball of being dragged for calculations
+    /// Send BallGrab Ui Element away
+    /// </summary>
+    /// <param name="EventData"></param>
     public void OnBallDragStart(BaseEventData EventData) { BallInterface.OnBallGrabbed(); PlayUiAnim("BallGrabGo",2); /* Debug.LogWarning("BallDragStart");*/ }
 
+
+    /// <summary>
+    /// Calculate drag strength
+    /// Adjust Hit rotation indicators rotations
+    /// Adjust Hit Magnitude indicator colors
+    /// </summary>
+    /// <param name="EventData"></param>
     public void OnBallDrag(BaseEventData EventData)
     {
         PointerEventData pointerData = (PointerEventData)EventData;
@@ -281,7 +383,12 @@ public class InGameUi : MonoBehaviour, IMiniGolf
 
 
     }
-
+    /// <summary>
+    /// Notify ball of grab
+    /// Activate trajectory
+    /// Trajectory is a 3D Ui Element bound to the Ball so we manage it through here. 
+    /// </summary>
+    /// <param name="EventData"></param>
     public void OnBallButtonDown(BaseEventData EventData) 
     {
 
@@ -289,10 +396,21 @@ public class InGameUi : MonoBehaviour, IMiniGolf
        BallInterface.ActivateTrajectory(true);
 
     }
+    /// <summary>
+    /// Notify ball of release
+    /// Deactivate trajectory
+    /// Trajectory is a 3D Ui Element bound to the Ball so we manage it through here. 
+    /// </summary>
+    /// <param name="EventData"></param>
     public void OnBallButtonUp(BaseEventData EventData) { BallInterface.OnBallReleased(); BallInterface.ActivateTrajectory(false); }
 
 
-
+    /// <summary>
+    /// Release ball
+    /// Reset BallGrabUi in place
+    /// Reset HitMagnitude Colors
+    /// </summary>
+    /// <param name="EventData"></param>
     public void OnBallDragEnded(BaseEventData EventData) 
     {
         BallInterface.OnBallReleased();
@@ -302,19 +420,30 @@ public class InGameUi : MonoBehaviour, IMiniGolf
         PullbarImage.color = new Color32(0, 0, 0, 0);
     }
 
-
+    /// <summary>
+    /// Reset BallGrabUi in place
+    /// </summary>
+    /// <param name="OnScreenPos"></param>
     public void AdjustBallUiPos(Vector2 OnScreenPos) { BallGrabImage.transform.position = canvas.transform.TransformPoint(OnScreenPos); }
     #endregion
 
     #region IMiniGolf
-
+    /// <summary>
+    /// Called when ball is stopped
+    /// Brings BallGrabUi back
+    /// </summary>
     public void OnBallReady() { BallInterface.OnBallReady();  PlayUiAnim("BallGrabCome", 2); }
 
-
+    /// <summary>
+    /// Called when level is ready to go by GameManager
+    /// Plays LevelLoadAnim
+    /// </summary>
     public void LevelStart() { PlayUiAnim("LevelLoadAnim"); }
     #endregion
 
-
+    /// <summary>
+    /// Calculates Hit and pull Ui rotations from Current touch position to ball position
+    /// </summary>
     private void RotateBars() 
     {
 
@@ -323,13 +452,19 @@ public class InGameUi : MonoBehaviour, IMiniGolf
         PullBar.rotation = Quaternion.Euler(0, 0, angle);   
 
     }
-
+    /// <summary>
+    /// Sets Bar Colors
+    /// </summary>
+    /// <param name="NewColor"></param>
     private void ColorBars(Color32 NewColor) 
     {
         HitbarImage.color = NewColor;
         PullbarImage.color = NewColor;
     }
-
+    /// <summary>
+    /// Lerps Bar Colors according to current hit magnitude calculations
+    /// </summary>
+    /// <returns></returns>
     private Color32 LerpColor() 
     {
         float Distance = Vector2.Distance(HitBar.anchoredPosition, PullBar.anchoredPosition);
